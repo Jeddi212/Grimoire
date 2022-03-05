@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/notesFragment">
+
+    <fragment
+        android:id="@+id/notesFragment"
+        android:name="com.ppb.grimoire.NotesFragment"
+        android:label="fragment_notes"
+        tools:layout="@layout/fragment_notes" />
+    <fragment
+        android:id="@+id/todayFragment"
+        android:name="com.ppb.grimoire.TodayFragment"
+        android:label="fragment_today"
+        tools:layout="@layout/fragment_today" />
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="com.ppb.grimoire.ScheduleFragment"
+        android:label="fragment_schedule"
+        tools:layout="@layout/fragment_schedule" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.ppb.grimoire.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>
