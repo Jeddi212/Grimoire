@@ -8,21 +8,21 @@
     <fragment
         android:id="@+id/notesFragment"
         android:name="com.ppb.grimoire.ui.notes.NotesFragment"
-        android:label="fragment_notes"
+        android:label="@string/notes"
         tools:layout="@layout/fragment_notes" />
     <fragment
         android:id="@+id/todayFragment"
         android:name="com.ppb.grimoire.ui.today.TodayFragment"
-        android:label="fragment_today"
+        android:label="@string/today"
         tools:layout="@layout/fragment_today" />
     <fragment
         android:id="@+id/scheduleFragment"
         android:name="com.ppb.grimoire.ui.schedule.ScheduleFragment"
-        android:label="fragment_schedule"
+        android:label="@string/schedule"
         tools:layout="@layout/fragment_schedule" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.ppb.grimoire.ui.profile.ProfileFragment"
-        android:label="fragment_profile"
+        android:label="@string/profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>
