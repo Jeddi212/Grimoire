@@ -39,9 +39,19 @@ class MainActivity : AppCompatActivity() {
 
         //Initialize the bottom navigation view
         //create bottom navigation view object
-//        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
-//        val navController = findNavController(R.id.nav_fragment)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-//        bottomNavigationView.setupWithNavController(navController)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.notesFragment,
+                R.id.todayFragment,
+                R.id.scheduleFragment,
+                R.id.profileFragment
+            )
+        )
+
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        bottomNavigationView.setupWithNavController(navController)
     }
 }
