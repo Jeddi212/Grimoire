@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
+        // Dynamic Action Bar, Buang aja kali ya? pasang textview manual aja nanti?
+        // Soalnya nutupin content
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.notesFragment,
@@ -50,8 +52,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.profileFragment
             )
         )
-
         setupActionBarWithNavController(navController, appBarConfiguration)
+
         bottomNavigationView.setupWithNavController(navController)
     }
 }

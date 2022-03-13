@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import com.ppb.grimoire.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -17,10 +19,14 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ProfileFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), View.OnClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var tvHello: TextView
+    private lateinit var btnEditProfile: Button
+    var name: String = "your name..." // Nanti ambil nama user-nya dari sini
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,5 +62,22 @@ class ProfileFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        tvHello = view.findViewById(R.id.nameTextView)
+        tvHello.text = resources.getString(R.string.nameTextView, name)
+
+        btnEditProfile = view.findViewById(R.id.editProfileButton)
+        btnEditProfile.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View) {
+        if (v.id == R.id.editProfileButton) {
+            tvHello.text = "Welcome"
+            btnEditProfile.text = "Button Ciao!"
+            btnEditProfile.setBackgroundColor(resources.getColor(R.color.teal_200, null))
+        }
     }
 }
