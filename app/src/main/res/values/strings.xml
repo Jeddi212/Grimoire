@@ -16,4 +16,7 @@
     <string name="news">News</string>
     <string name="news_title">News Title</string>
     <string name="news_description">News Description</string>
+
+    <string name="server_client_id">560697910330-1t925hk0gihm4v2n9uh7ro3mtogsbc06.apps.googleusercontent.com</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

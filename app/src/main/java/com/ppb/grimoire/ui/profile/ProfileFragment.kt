@@ -69,12 +69,12 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         tvHello = view.findViewById(R.id.nameTextView)
         tvHello.text = resources.getString(R.string.nameTextView, name)
 
-        btnEditProfile = view.findViewById(R.id.editProfileButton)
+        btnEditProfile = view.findViewById(R.id.sign_out_button)
         btnEditProfile.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
-        if (v.id == R.id.editProfileButton) {
+        if (v.id == R.id.sign_out_button) {
             tvHello.text = "Welcome"
             btnEditProfile.text = "Button Ciao!"
             btnEditProfile.setBackgroundColor(resources.getColor(R.color.teal_200, null))
