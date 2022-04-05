@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.notesFragment,
                 R.id.todayFragment,
                 R.id.scheduleFragment,
+                R.id.newsFragment,
                 R.id.profileFragment
             )
         )
