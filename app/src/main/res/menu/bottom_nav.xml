@@ -9,6 +9,10 @@
         android:title="@string/today"
         android:icon="@drawable/ic_baseline_calendar_view_day_24"/>
     <item
+        android:id="@+id/newsFragment"
+        android:title="@string/news"
+        android:icon="@drawable/ic_baseline_table_chart_24"/>
+    <item
         android:id="@+id/scheduleFragment"
         android:title="@string/schedule"
         android:icon="@drawable/ic_baseline_today_24"/>
