@@ -38,10 +38,10 @@
             android:textSize="20sp"/>
 
         <Button
-            android:id="@+id/editProfileButton"
+            android:id="@+id/sign_out_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Profile"/>
+            android:text="@string/sign_out"/>
 
     </LinearLayout>
 </ScrollView>

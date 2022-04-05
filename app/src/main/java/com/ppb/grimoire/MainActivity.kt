@@ -1,15 +1,21 @@
 package com.ppb.grimoire
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.ppb.grimoire.databinding.ActivityMainBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 //    private lateinit var binding: ActivityMainBinding
 //
@@ -32,10 +38,25 @@ class MainActivity : AppCompatActivity() {
 //        setupActionBarWithNavController(navController, appBarConfiguration)
 //        navView.setupWithNavController(navController)
 //    }
+    lateinit var mGoogleSignInClient : GoogleSignInClient
+    lateinit var signout : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        lateinit var user : User
+        val acct = GoogleSignIn.getLastSignedInAccount(this)
+        if (acct != null) {
+            var personName = acct.displayName.toString()
+            var personGivenName = acct.givenName.toString()
+            var personFamilyName = acct.familyName.toString()
+            var personEmail = acct.email.toString()
+            var personId = acct.id.toString()
+            var personPhoto = acct.photoUrl
+            Log.d("name",personName)
+            user = User(personName,personGivenName,personFamilyName,personEmail,personId, personPhoto)
+        }
+        Log.d("name",user.personName)
 
         //Initialize the bottom navigation view
         //create bottom navigation view object
@@ -55,6 +76,24 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        signout = findViewById(R.id.sign_out_button)
+        signout.setOnClickListener(this)
+
         bottomNavigationView.setupWithNavController(navController)
+
     }
+    private fun signOut() {
+        mGoogleSignInClient.signOut()
+            .addOnCompleteListener(this) {
+                Toast.makeText(this,"Signed Out Successfully", Toast.LENGTH_LONG).show()
+                finish()
+            }
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.sign_out_button-> signOut()
+        }
+    }
+
 }
