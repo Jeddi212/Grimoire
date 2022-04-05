@@ -15,7 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity()/*, View.OnClickListener */{
 
 //    private lateinit var binding: ActivityMainBinding
 //
@@ -38,25 +38,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //        setupActionBarWithNavController(navController, appBarConfiguration)
 //        navView.setupWithNavController(navController)
 //    }
-    lateinit var mGoogleSignInClient : GoogleSignInClient
-    lateinit var signout : Button
+//    lateinit var mGoogleSignInClient : GoogleSignInClient
+//    lateinit var signout : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        lateinit var user : User
-        val acct = GoogleSignIn.getLastSignedInAccount(this)
-        if (acct != null) {
-            var personName = acct.displayName.toString()
-            var personGivenName = acct.givenName.toString()
-            var personFamilyName = acct.familyName.toString()
-            var personEmail = acct.email.toString()
-            var personId = acct.id.toString()
-            var personPhoto = acct.photoUrl
-            Log.d("name",personName)
-            user = User(personName,personGivenName,personFamilyName,personEmail,personId, personPhoto)
-        }
-        Log.d("name",user.personName)
+//        lateinit var user : User
+//        val acct = GoogleSignIn.getLastSignedInAccount(this)
+//        if (acct != null) {
+//            var personName = acct.displayName.toString()
+//            var personGivenName = acct.givenName.toString()
+//            var personFamilyName = acct.familyName.toString()
+//            var personEmail = acct.email.toString()
+//            var personId = acct.id.toString()
+//            var personPhoto = acct.photoUrl
+//            Log.d("name",personName)
+//            user = User(personName,personGivenName,personFamilyName,personEmail,personId, personPhoto)
+//        }
+//        Log.d("name",user.personName)
+
+
 
         //Initialize the bottom navigation view
         //create bottom navigation view object
@@ -76,24 +78,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        signout = findViewById(R.id.sign_out_button)
-        signout.setOnClickListener(this)
+//        signout = findViewById(R.id.sign_out_button)
+//        signout.setOnClickListener(this)
 
         bottomNavigationView.setupWithNavController(navController)
 
     }
-    private fun signOut() {
-        mGoogleSignInClient.signOut()
-            .addOnCompleteListener(this) {
-                Toast.makeText(this,"Signed Out Successfully", Toast.LENGTH_LONG).show()
-                finish()
-            }
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.sign_out_button-> signOut()
-        }
-    }
+//    private fun signOut() {
+//        mGoogleSignInClient.signOut()
+//            .addOnCompleteListener(this) {
+//                Toast.makeText(this,"Signed Out Successfully", Toast.LENGTH_LONG).show()
+//                finish()
+//            }
+//    }
+//
+//    override fun onClick(v: View) {
+//        when (v.id) {
+//            R.id.sign_out_button-> signOut()
+//        }
+//    }
 
 }
