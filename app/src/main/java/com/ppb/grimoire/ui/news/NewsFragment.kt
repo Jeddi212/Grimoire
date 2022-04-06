@@ -25,7 +25,6 @@ class NewsFragment : Fragment(), OnItemClickListener{
     var list = ArrayList<News>()
 
     fun getListNews(){
-        Log.d("d","D")
         binding.progressBar.visibility = View.VISIBLE
         val url = "https://newsapi.org/v2/top-headlines?country=id&apiKey=4c47daa5a8294b4f911942117bfdc09e"
         val client = AsyncHttpClient()

@@ -17,7 +17,6 @@ import com.google.android.gms.tasks.Task
 
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
-//    lateinit var  signin : SignInButton
     lateinit var mGoogleSignInClient : GoogleSignInClient
     var RC_SIGN_IN  = 0
     override fun onCreate(savedInstanceState: Bundle?) {
