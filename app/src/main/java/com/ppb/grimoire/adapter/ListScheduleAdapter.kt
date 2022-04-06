@@ -13,9 +13,20 @@ import com.ppb.grimoire.model.Schedule
 
 class ListScheduleAdapter(
 //    private val activity: Activity,
-    var listSchedule: ArrayList<Schedule>)
+//    var listSchedule: ArrayList<Schedule>)
 //    private val itemClickListener: OnItemClickListener)
+    )
     : RecyclerView.Adapter<ListScheduleAdapter.ListViewHolder>() {
+
+    var listSchedule = ArrayList<Schedule>()
+    set(listSchedule) {
+        if (listSchedule.size > 0) {
+            this.listSchedule.clear()
+            }
+        this.listSchedule.addAll(listSchedule)
+
+        notifyDataSetChanged()
+    }
 
     class ListViewHolder(private val binding: ItemScheduleBinding) :
         RecyclerView.ViewHolder(binding.root) {

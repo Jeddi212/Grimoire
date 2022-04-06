@@ -76,7 +76,6 @@ class ScheduleFragment : Fragment() {
     ): View {
         binding.rvSchedule.setHasFixedSize(true)
 
-//        listSchedule.addAll(listScheduleAdapter.listSchedule)
         showRecyclerList()
 
         binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
@@ -97,7 +96,7 @@ class ScheduleFragment : Fragment() {
 
     private fun showRecyclerList() {
         binding.rvSchedule.layoutManager = LinearLayoutManager(context)
-        listScheduleAdapter = ListScheduleAdapter(listSchedule)
+        listScheduleAdapter = ListScheduleAdapter()
         binding.rvSchedule.adapter = listScheduleAdapter
     }
 
