@@ -21,10 +21,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.util.*
+import kotlin.collections.ArrayList
 
-
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -33,10 +31,11 @@ class ScheduleFragment : Fragment() {
     private lateinit var binding: FragmentScheduleBinding
     private var listSchedule = ArrayList<Schedule>()
 
-    private lateinit var adapter: ListScheduleAdapter
+    // Disini adapter nya make yang lama, bukan yang 'adapter'
+//    private lateinit var adapter: ListScheduleAdapter
     private lateinit var scheduleHelper: ScheduleHelper
+    lateinit var listScheduleAdapter: ListScheduleAdapter
 
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -49,22 +48,24 @@ class ScheduleFragment : Fragment() {
 
         binding = FragmentScheduleBinding.inflate(layoutInflater)
 
-        binding.fabAdd?.setOnClickListener {
+        binding.fabAdd.setOnClickListener {
             val intent = Intent(context, ScheduleAddUpdateActivity::class.java)
             startActivityForResult(intent, ScheduleAddUpdateActivity.REQUEST_ADD)
         }
 
-//        scheduleHelper = ScheduleHelper.getInstance(requireContext())
-        scheduleHelper = ScheduleHelper.getInstance(Activity().applicationContext)
+        scheduleHelper = ScheduleHelper.getInstance(requireContext())
+        // TODO ini bikin error
+//        scheduleHelper = ScheduleHelper.getInstance(Activity().applicationContext)
         scheduleHelper.open()
 
         if (savedInstanceState == null) {
             // proses ambil data
+            // TODO ini bikin error
             loadScheduleAsync()
         } else {
             val list = savedInstanceState.getParcelableArrayList<Schedule>(EXTRA_STATE)
             if (list != null) {
-                adapter.listSchedule = list
+                listScheduleAdapter.listSchedule = list
             }
         }
     }
@@ -75,7 +76,7 @@ class ScheduleFragment : Fragment() {
     ): View {
         binding.rvSchedule.setHasFixedSize(true)
 
-        listSchedule.addAll(getListSchedule(convertDate(binding.calendar.date)))
+//        listSchedule.addAll(getListSchedule(convertDate(binding.calendar.date)))
         showRecyclerList()
 
         binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
@@ -83,8 +84,8 @@ class ScheduleFragment : Fragment() {
 
             val clickedDate = getClickedDate(year, month, dayOfMonth)
 
-            listSchedule.clear()
-            listSchedule.addAll(getListSchedule(clickedDate))
+//            listSchedule.clear()
+//            listSchedule.addAll(getListSchedule(clickedDate))
 
             showRecyclerList()
         }
@@ -95,7 +96,7 @@ class ScheduleFragment : Fragment() {
 
     private fun showRecyclerList() {
         binding.rvSchedule.layoutManager = LinearLayoutManager(context)
-        val listScheduleAdapter = ListScheduleAdapter(listSchedule)
+        listScheduleAdapter = ListScheduleAdapter(listSchedule)
         binding.rvSchedule.adapter = listScheduleAdapter
     }
 
@@ -156,21 +157,21 @@ class ScheduleFragment : Fragment() {
             when (requestCode) {
                 ScheduleAddUpdateActivity.REQUEST_ADD -> if (resultCode ==
                     ScheduleAddUpdateActivity.RESULT_ADD) {
-                    val note = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
+                    val schedule = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
 
                     // Not NULL?
-                    adapter.addItem(note!!)
-                    binding.rvSchedule.smoothScrollToPosition(adapter.itemCount - 1)
+                    listScheduleAdapter.addItem(schedule!!)
+                    binding.rvSchedule.smoothScrollToPosition(listScheduleAdapter.itemCount - 1)
 
                     showSnackbarMessage("One item recorded successfully")
                 }
                 ScheduleAddUpdateActivity.REQUEST_UPDATE ->
                     when (resultCode) {
                         ScheduleAddUpdateActivity.RESULT_UPDATE -> {
-                            val note = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
+                            val schedule = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
                             val position = data.getIntExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, 0)
 
-                            adapter.updateItem(position, note!!)
+                            listScheduleAdapter.updateItem(position, schedule!!)
                             binding.rvSchedule.smoothScrollToPosition(position)
 
                             showSnackbarMessage("One item updated succesfully")
@@ -178,7 +179,7 @@ class ScheduleFragment : Fragment() {
                         ScheduleAddUpdateActivity.RESULT_DELETE -> {
                             val position = data.getIntExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, 0)
 
-                            adapter.removeItem(position)
+                            listScheduleAdapter.removeItem(position)
 
                             showSnackbarMessage("One item deleted successfully")
                         }
@@ -189,27 +190,37 @@ class ScheduleFragment : Fragment() {
 
     private fun loadScheduleAsync() {
         GlobalScope.launch(Dispatchers.Main) {
-            binding.progressbar?.visibility = View.VISIBLE
+            binding.progressbar.visibility = View.VISIBLE
             val deferredNotes = async(Dispatchers.IO) {
                 val cursor = scheduleHelper.queryAll()
                 MappingHelper.mapCursorToArrayList(cursor)
             }
 
-            binding.progressbar?.visibility = View.INVISIBLE
+            binding.progressbar.visibility = View.INVISIBLE
             val schedule = deferredNotes.await()
 
+            // TODO masuk ke sini
+//            binding.tvDate?.setText("Masuk loadScheduleAsync")
+//            binding.tvDate?.text = schedule[0].title
+
             if (schedule.size > 0) {
-                adapter.listSchedule = schedule
+//                adapter.listSchedule = schedule
+                listScheduleAdapter.listSchedule = schedule
+
             } else {
-                adapter.listSchedule = ArrayList()
-                showSnackbarMessage("Nothing to show for now")
+//                adapter.listSchedule = ArrayList()
+                listScheduleAdapter.listSchedule = ArrayList()
+                showSnackbarMessage("Seems to be empty here, enjoy your day")
             }
+
+            // TODO masuk juga ke sini ke if true
+//            binding.tvDate?.text = listScheduleAdapter.listSchedule[0].title
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(EXTRA_STATE, adapter.listSchedule)
+        outState.putParcelableArrayList(EXTRA_STATE, listScheduleAdapter.listSchedule)
     }
 
     companion object {
@@ -221,7 +232,6 @@ class ScheduleFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment ScheduleFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             ScheduleFragment().apply {

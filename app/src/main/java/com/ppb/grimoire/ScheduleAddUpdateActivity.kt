@@ -69,7 +69,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             }
         } else {
             actionBarTitle = "Add Reminder"
-            btnTitle = "Save"
+            btnTitle = "Submit"
         }
 
         supportActionBar?.title = actionBarTitle
@@ -91,8 +91,11 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
             schedule?.title = title
 
-            var account = GoogleSignIn.getLastSignedInAccount(this)
+            val account = GoogleSignIn.getLastSignedInAccount(this)
             schedule?.personId = account?.id.toString()
+
+            // TODO Sampe sini masuk
+//            edt_title.setText(account?.id.toString())
 
             val intent = Intent()
             intent.putExtra(EXTRA_SCHEDULE, schedule)
@@ -118,21 +121,22 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 values.put(DATE, getCurrentDate())
                 val result = scheduleHelper.insert(values)
 
+                // TODO sampe sini masuk
+//                edt_title.setText(schedule?.date)
+
                 if (result > 0) {
                     schedule?.id = result.toInt()
-
-                    if (result > 0) {
-                        schedule?.id = result.toInt()
-                        setResult(RESULT_ADD, intent)
-                        finish()
-                    } else {
-                        Toast.makeText(
-                            this@ScheduleAddUpdateActivity,
-                            "Add reminder fail",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    setResult(RESULT_ADD, intent)
+                    edt_title.setText(schedule?.id.toString())
+                    finish()
+                } else {
+                    Toast.makeText(
+                        this@ScheduleAddUpdateActivity,
+                        "Add reminder fail",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+
             }
 
         }
