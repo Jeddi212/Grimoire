@@ -37,4 +37,30 @@
         <item>Masak Makaroni 🍝</item>
         <item>Quality Time bareng Doi Tercinta Pisan 😘</item>
     </string-array>
+
+    <string-array name="schedule_item2">
+        <item>Ambil Soju di Timothy 🍷</item>
+        <item>Quality Time bareng Doi Tercinta Pisan 😘</item>
+        <item>Cek Giveaway 🎁</item>
+        <item>Jemur Kasur 🛏</item>
+        <item>Ngukur Baju Kebaya 🌥</item>
+        <item>Jemput Mamah 🚲</item>
+        <item>Belanja Sayur 🍅</item>
+        <item>Analisis Anime Bareng Dave 🎬</item>
+        <item>Belajar UAS 📚</item>
+        <item>On Mobile Legends 📳🤙</item>
+        <item>Masak Air Biar Mateng 💦</item>
+        <item>Masak Makaroni 🍝</item>
+        <item>Cas Laptop 💻</item>
+        <item>Nugas Android 💻</item>
+        <item>Ajak Cliff ke Mall 🏨</item>
+        <item>Beli Pasir ⏳</item>
+        <item>Benerin Sapu 🧹</item>
+        <item>Rayain ulang tahun Dave 🎂</item>
+        <item>Jangan Lupa Bahagia 😆</item>
+        <item>Bayar makaroni ke Feldy 🍣</item>
+        <item>Service Laptop si Merah 🔥</item>
+        <item>Mandiin Ucing 🐈</item>
+        <item>Nyuci Baju 👚</item>
+    </string-array>
 </resources>

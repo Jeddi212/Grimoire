@@ -43,11 +43,18 @@ class ScheduleFragment : Fragment() {
     ): View {
         binding.rvSchedule.setHasFixedSize(true)
 
-        listSchedule.addAll(getListSchedule())
+        listSchedule.addAll(getListSchedule(convertDate(binding.calendar.date)))
         showRecyclerList()
 
         binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
             showDateText(year, month, dayOfMonth)
+
+            val clickedDate = getClickedDate(year, month, dayOfMonth)
+
+            listSchedule.clear()
+            listSchedule.addAll(getListSchedule(clickedDate))
+
+            showRecyclerList()
         }
 
         // Inflate the layout for this fragment
@@ -62,18 +69,32 @@ class ScheduleFragment : Fragment() {
 
     private fun showDateText(year: Int, month: Int, dayOfMonth: Int) {
         val dateString = dayOfMonth.toString() +
-                "/" + month.toString() +
+                "/" + (month + 1).toString() +
                 "/" + year.toString()
 
         binding.tvDate?.text = dateString
     }
 
-    private fun convertDate(dateInMilliseconds: Long, dateFormat: String?): String {
+    private fun getClickedDate(year: Int, month: Int, dayOfMonth: Int) : String {
+        val dateString = dayOfMonth.toString() +
+                "/" + (month + 1).toString() +
+                "/" + year.toString()
+
+        return dateString
+    }
+
+    private fun convertDate(dateInMilliseconds: Long): String {
+        val dateFormat = "d/M/yyyy"
         return DateFormat.format(dateFormat, dateInMilliseconds).toString()
     }
 
-    private fun getListSchedule() : ArrayList<Schedule> {
-        val dataSchedule = resources.getStringArray(R.array.schedule_item)
+    private fun getListSchedule(date: String) : ArrayList<Schedule> {
+        val dataSchedule = if (date == "6/4/2022") {
+            resources.getStringArray(R.array.schedule_item)
+        } else {
+            resources.getStringArray(R.array.schedule_item2)
+        }
+
         val lSch = ArrayList<Schedule>()
 
         for (i in dataSchedule.indices) {
