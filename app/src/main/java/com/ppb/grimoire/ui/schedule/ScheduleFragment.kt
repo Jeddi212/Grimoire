@@ -1,5 +1,7 @@
 package com.ppb.grimoire.ui.schedule
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.LayoutInflater
@@ -7,10 +9,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.ppb.grimoire.R
+import com.ppb.grimoire.ScheduleAddUpdateActivity
 import com.ppb.grimoire.adapter.ListScheduleAdapter
 import com.ppb.grimoire.databinding.FragmentScheduleBinding
+import com.ppb.grimoire.db.ScheduleHelper
+import com.ppb.grimoire.helper.MappingHelper
 import com.ppb.grimoire.model.Schedule
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -21,7 +31,10 @@ private const val ARG_PARAM2 = "param2"
 
 class ScheduleFragment : Fragment() {
     private lateinit var binding: FragmentScheduleBinding
-    private val listSchedule = ArrayList<Schedule>()
+    private var listSchedule = ArrayList<Schedule>()
+
+    private lateinit var adapter: ListScheduleAdapter
+    private lateinit var scheduleHelper: ScheduleHelper
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -35,6 +48,25 @@ class ScheduleFragment : Fragment() {
         }
 
         binding = FragmentScheduleBinding.inflate(layoutInflater)
+
+        binding.fabAdd?.setOnClickListener {
+            val intent = Intent(context, ScheduleAddUpdateActivity::class.java)
+            startActivityForResult(intent, ScheduleAddUpdateActivity.REQUEST_ADD)
+        }
+
+//        scheduleHelper = ScheduleHelper.getInstance(requireContext())
+        scheduleHelper = ScheduleHelper.getInstance(Activity().applicationContext)
+        scheduleHelper.open()
+
+        if (savedInstanceState == null) {
+            // proses ambil data
+            loadScheduleAsync()
+        } else {
+            val list = savedInstanceState.getParcelableArrayList<Schedule>(EXTRA_STATE)
+            if (list != null) {
+                adapter.listSchedule = list
+            }
+        }
     }
 
     override fun onCreateView(
@@ -75,12 +107,11 @@ class ScheduleFragment : Fragment() {
         binding.tvDate?.text = dateString
     }
 
-    private fun getClickedDate(year: Int, month: Int, dayOfMonth: Int) : String {
-        val dateString = dayOfMonth.toString() +
+    private fun getClickedDate(year: Int, month: Int, dayOfMonth: Int): String {
+
+        return dayOfMonth.toString() +
                 "/" + (month + 1).toString() +
                 "/" + year.toString()
-
-        return dateString
     }
 
     private fun convertDate(dateInMilliseconds: Long): String {
@@ -98,11 +129,87 @@ class ScheduleFragment : Fragment() {
         val lSch = ArrayList<Schedule>()
 
         for (i in dataSchedule.indices) {
-            val sch = Schedule(dataSchedule[i])
+            val sch = Schedule()
+            sch.title = dataSchedule[i]
+//            sch.personId = ?
+            sch.date = date
             lSch.add(sch)
         }
 
         return lSch
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scheduleHelper.close()
+    }
+
+    private fun showSnackbarMessage(message: String) {
+        Snackbar.make(binding.rvSchedule, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null) {
+            when (requestCode) {
+                ScheduleAddUpdateActivity.REQUEST_ADD -> if (resultCode ==
+                    ScheduleAddUpdateActivity.RESULT_ADD) {
+                    val note = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
+
+                    // Not NULL?
+                    adapter.addItem(note!!)
+                    binding.rvSchedule.smoothScrollToPosition(adapter.itemCount - 1)
+
+                    showSnackbarMessage("One item recorded successfully")
+                }
+                ScheduleAddUpdateActivity.REQUEST_UPDATE ->
+                    when (resultCode) {
+                        ScheduleAddUpdateActivity.RESULT_UPDATE -> {
+                            val note = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
+                            val position = data.getIntExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, 0)
+
+                            adapter.updateItem(position, note!!)
+                            binding.rvSchedule.smoothScrollToPosition(position)
+
+                            showSnackbarMessage("One item updated succesfully")
+                        }
+                        ScheduleAddUpdateActivity.RESULT_DELETE -> {
+                            val position = data.getIntExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, 0)
+
+                            adapter.removeItem(position)
+
+                            showSnackbarMessage("One item deleted successfully")
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun loadScheduleAsync() {
+        GlobalScope.launch(Dispatchers.Main) {
+            binding.progressbar?.visibility = View.VISIBLE
+            val deferredNotes = async(Dispatchers.IO) {
+                val cursor = scheduleHelper.queryAll()
+                MappingHelper.mapCursorToArrayList(cursor)
+            }
+
+            binding.progressbar?.visibility = View.INVISIBLE
+            val schedule = deferredNotes.await()
+
+            if (schedule.size > 0) {
+                adapter.listSchedule = schedule
+            } else {
+                adapter.listSchedule = ArrayList()
+                showSnackbarMessage("Nothing to show for now")
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(EXTRA_STATE, adapter.listSchedule)
     }
 
     companion object {
@@ -123,5 +230,9 @@ class ScheduleFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+
+        private const val EXTRA_STATE = "EXTRA_STATE"
+
     }
 }
