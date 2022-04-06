@@ -1,4 +1,4 @@
-package com.ppb.grimoire
+package com.ppb.grimoire.adapter
 
 import android.net.Uri
 import android.os.Parcelable

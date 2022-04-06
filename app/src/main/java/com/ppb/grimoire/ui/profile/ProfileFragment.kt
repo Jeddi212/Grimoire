@@ -10,13 +10,11 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.ppb.grimoire.R
-import com.ppb.grimoire.User
-import com.ppb.grimoire.databinding.FragmentNewsBinding
+import com.ppb.grimoire.adapter.User
 import com.ppb.grimoire.databinding.FragmentProfileBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -62,10 +60,10 @@ class ProfileFragment : Fragment(), View.OnClickListener {
             var personEmail = acct.email.toString()
             var personId = acct.id.toString()
             var personPhoto = acct.photoUrl
-            Log.d("name",personName)
+            Log.d("id",personId)
             user = User(personName,personGivenName,personFamilyName,personEmail,personId, personPhoto)
         }
-        Log.d("name",user.personPhoto.toString())
+        Log.d("id",user.personId)
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         if(user.personPhoto!=null) {
             with(binding) {

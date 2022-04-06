@@ -8,14 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.load.engine.executor.GlideExecutor.UncaughtThrowableStrategy.LOG
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import com.ppb.grimoire.*
+import com.ppb.grimoire.adapter.News
 import com.ppb.grimoire.databinding.FragmentNewsBinding
-import com.ppb.grimoire.databinding.ItemNewsBinding
 import cz.msebera.android.httpclient.Header
 import org.json.JSONArray
 import org.json.JSONObject
