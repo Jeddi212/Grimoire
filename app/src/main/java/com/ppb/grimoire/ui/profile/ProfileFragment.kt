@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.ppb.grimoire.R
@@ -27,7 +29,6 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class ProfileFragment : Fragment(), View.OnClickListener {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -37,7 +38,6 @@ class ProfileFragment : Fragment(), View.OnClickListener {
     lateinit var signout : Button
     private lateinit var binding: FragmentProfileBinding
     lateinit var user : User
-//    var name: String = "your name..." // Nanti ambil nama user-nya dari sini
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +51,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         val acct = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (acct != null) {
@@ -64,11 +64,18 @@ class ProfileFragment : Fragment(), View.OnClickListener {
             Log.d("name",personName)
             user = User(personName,personGivenName,personFamilyName,personEmail,personId, personPhoto)
         }
-        Log.d("name",user.personName)
+        Log.d("name",user.personPhoto.toString())
         binding = FragmentProfileBinding.inflate(inflater, container, false)
+        if(user.personPhoto!=null) {
+            with(binding) {
+                Glide.with(requireContext())
+                    .load(user.personPhoto)
+                    .into(userImageView)
+            }
+        }
         signout = binding.signOutButton
         signout.setOnClickListener(this)
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        return binding.root
     }
 
     companion object {
@@ -101,13 +108,6 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         btnEditProfile.setOnClickListener(this)
     }
 
-//    override fun onClick(v: View) {
-//        if (v.id == R.id.sign_out_button) {
-//            tvHello.text = "Welcome"
-//            btnEditProfile.text = "Button Ciao!"
-//            btnEditProfile.setBackgroundColor(resources.getColor(R.color.teal_200, null))
-//        }
-//    }
     private fun signOut() {
         mGoogleSignInClient.signOut()
             .addOnCompleteListener() {

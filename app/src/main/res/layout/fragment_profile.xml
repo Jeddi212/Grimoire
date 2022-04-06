@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_contacts_24"
+            android:src="@mipmap/ic_profile_placeholder"
             android:layout_marginBottom="100dp"/>
 
         <TextView
