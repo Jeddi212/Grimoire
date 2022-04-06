@@ -1,15 +1,18 @@
 package com.ppb.grimoire.ui.schedule
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ppb.grimoire.R
 import com.ppb.grimoire.adapter.ListScheduleAdapter
 import com.ppb.grimoire.databinding.FragmentScheduleBinding
 import com.ppb.grimoire.model.Schedule
+import java.util.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,8 +46,11 @@ class ScheduleFragment : Fragment() {
         listSchedule.addAll(getListSchedule())
         showRecyclerList()
 
+        binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            showDateText(year, month, dayOfMonth)
+        }
+
         // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_schedule, container, false)
         return binding.root
     }
 
@@ -52,6 +58,18 @@ class ScheduleFragment : Fragment() {
         binding.rvSchedule.layoutManager = LinearLayoutManager(context)
         val listScheduleAdapter = ListScheduleAdapter(listSchedule)
         binding.rvSchedule.adapter = listScheduleAdapter
+    }
+
+    private fun showDateText(year: Int, month: Int, dayOfMonth: Int) {
+        val dateString = dayOfMonth.toString() +
+                "/" + month.toString() +
+                "/" + year.toString()
+
+        binding.tvDate?.text = dateString
+    }
+
+    private fun convertDate(dateInMilliseconds: Long, dateFormat: String?): String {
+        return DateFormat.format(dateFormat, dateInMilliseconds).toString()
     }
 
     private fun getListSchedule() : ArrayList<Schedule> {
