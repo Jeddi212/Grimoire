@@ -1,4 +1,4 @@
-package com.ppb.grimoire
+package com.ppb.grimoire.adapter
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
