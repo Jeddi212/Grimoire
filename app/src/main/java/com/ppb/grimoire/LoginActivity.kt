@@ -1,8 +1,6 @@
 package com.ppb.grimoire
 
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -22,15 +20,20 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        val signin = findViewById<SignInButton>(R.id.sign_in_button)
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if(account == null) {
+            val signin = findViewById<SignInButton>(R.id.sign_in_button)
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
 
-        signin.setOnClickListener(this)
+            signin.setOnClickListener(this)
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        signin.setSize(SignInButton.SIZE_STANDARD)
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+            signin.setSize(SignInButton.SIZE_STANDARD)
+        } else {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
     }
 
     override fun onClick(v: View) {
