@@ -84,15 +84,16 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         if (view.id == R.id.btn_submit) {
             val title = edt_title.text.toString().trim()
 
+            val account = GoogleSignIn.getLastSignedInAccount(this)
+            val personId = account?.id.toString()
+
             if (title.isEmpty()) {
                 edt_title.error = "Field can't be blank"
                 return
             }
 
             schedule?.title = title
-
-            val account = GoogleSignIn.getLastSignedInAccount(this)
-            schedule?.personId = account?.id.toString()
+            schedule?.personId = personId
 
             // TODO Sampe sini masuk
 //            edt_title.setText(account?.id.toString())
@@ -102,6 +103,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
             val values = ContentValues()
             values.put(DatabaseContract.ScheduleColumns.TITLE, title)
+            values.put(DatabaseContract.ScheduleColumns.PERSON_ID, personId)
 
             if (isEdit) {
                 val result = scheduleHelper.update(schedule?.id.toString(), values).toLong()
@@ -119,15 +121,24 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 schedule?.date = getCurrentDate()
                 values.put(DATE, getCurrentDate())
+
+                // TODO insert ke db masih ERRORRRRRR !!
                 val result = scheduleHelper.insert(values)
 
                 // TODO sampe sini masuk
 //                edt_title.setText(schedule?.date)
+//                edt_title.setText(values.get(DATE).toString())
+
+                // TODO return nya -1, error ga tau diamana ?
+//                edt_title.setText(result.toString())
 
                 if (result > 0) {
                     schedule?.id = result.toInt()
                     setResult(RESULT_ADD, intent)
-                    edt_title.setText(schedule?.id.toString())
+
+                    // TODO ga masuk sini, tapi else
+//                    edt_title.setText(schedule?.id.toString())
+
                     finish()
                 } else {
                     Toast.makeText(
@@ -159,7 +170,6 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onBackPressed() {
         showAlertDialog(ALERT_DIALOG_CLOSE)
-
     }
 
     private fun showAlertDialog(type: Int) {

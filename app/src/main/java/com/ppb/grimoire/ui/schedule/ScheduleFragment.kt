@@ -57,9 +57,10 @@ class ScheduleFragment : Fragment() {
 //        scheduleHelper = ScheduleHelper.getInstance(Activity().applicationContext)
         scheduleHelper.open()
 
+        // TODO rotate layar masih exit aja !!
         if (savedInstanceState == null) {
             // proses ambil data
-            // TODO ini bikin error
+            // TODO ini bikin error, eh tapi engga juga deng
             loadScheduleAsync()
         } else {
             val list = savedInstanceState.getParcelableArrayList<Schedule>(EXTRA_STATE)
