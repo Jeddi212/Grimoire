@@ -12,7 +12,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         //Initialize the bottom navigation view
         //create bottom navigation view object
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
@@ -23,11 +22,14 @@ class MainActivity : AppCompatActivity() {
                 R.id.notesFragment,
                 R.id.todayFragment,
                 R.id.scheduleFragment,
+                R.id.newsFragment,
                 R.id.profileFragment
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+
         bottomNavigationView.setupWithNavController(navController)
+
     }
 }

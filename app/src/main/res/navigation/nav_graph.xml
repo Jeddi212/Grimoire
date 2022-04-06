@@ -16,6 +16,11 @@
         android:label="@string/today"
         tools:layout="@layout/fragment_today" />
     <fragment
+        android:id="@+id/newsFragment"
+        android:name="com.ppb.grimoire.ui.news.NewsFragment"
+        android:label="@string/news"
+        tools:layout="@layout/fragment_news" />
+    <fragment
         android:id="@+id/scheduleFragment"
         android:name="com.ppb.grimoire.ui.schedule.ScheduleFragment"
         android:label="@string/schedule"
