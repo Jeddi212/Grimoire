@@ -11,3 +11,6 @@ Feature
 - Schedule
   <br>
   Schedule all you work here with a calendar view
+- News
+  <br>
+  News of today
