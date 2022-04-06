@@ -1,6 +1,5 @@
 package com.ppb.grimoire.ui.schedule
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -76,7 +75,7 @@ class ScheduleFragment : Fragment() {
     ): View {
         binding.rvSchedule.setHasFixedSize(true)
 
-//        listSchedule.addAll(getListSchedule(convertDate(binding.calendar.date)))
+//        listSchedule.addAll(listScheduleAdapter.listSchedule)
         showRecyclerList()
 
         binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
@@ -84,8 +83,9 @@ class ScheduleFragment : Fragment() {
 
             val clickedDate = getClickedDate(year, month, dayOfMonth)
 
-//            listSchedule.clear()
-//            listSchedule.addAll(getListSchedule(clickedDate))
+            listSchedule.clear()
+            loadScheduleAsync()
+            listSchedule.addAll(listScheduleAdapter.listSchedule)
 
             showRecyclerList()
         }
@@ -191,22 +191,20 @@ class ScheduleFragment : Fragment() {
     private fun loadScheduleAsync() {
         GlobalScope.launch(Dispatchers.Main) {
             binding.progressbar.visibility = View.VISIBLE
-            val deferredNotes = async(Dispatchers.IO) {
+            val deferredSchedule = async(Dispatchers.IO) {
                 val cursor = scheduleHelper.queryAll()
                 MappingHelper.mapCursorToArrayList(cursor)
             }
 
             binding.progressbar.visibility = View.INVISIBLE
-            val schedule = deferredNotes.await()
+            val schedule = deferredSchedule.await()
 
             // TODO masuk ke sini
-//            binding.tvDate?.setText("Masuk loadScheduleAsync")
 //            binding.tvDate?.text = schedule[0].title
 
             if (schedule.size > 0) {
 //                adapter.listSchedule = schedule
                 listScheduleAdapter.listSchedule = schedule
-
             } else {
 //                adapter.listSchedule = ArrayList()
                 listScheduleAdapter.listSchedule = ArrayList()
