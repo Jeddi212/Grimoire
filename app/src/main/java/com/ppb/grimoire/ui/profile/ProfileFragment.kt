@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.ppb.grimoire.R
 import com.ppb.grimoire.User
 import com.ppb.grimoire.databinding.FragmentNewsBinding
@@ -53,7 +54,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val acct = GoogleSignIn.getLastSignedInAccount(requireContext())
+        val acct = GoogleSignIn.getLastSignedInAccount(requireActivity())
         if (acct != null) {
             var personName = acct.displayName.toString()
             var personGivenName = acct.givenName.toString()
@@ -109,6 +110,10 @@ class ProfileFragment : Fragment(), View.OnClickListener {
     }
 
     private fun signOut() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
         mGoogleSignInClient.signOut()
             .addOnCompleteListener() {
                 Toast.makeText(requireContext(),"Signed Out Successfully", Toast.LENGTH_LONG).show()
