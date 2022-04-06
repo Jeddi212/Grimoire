@@ -50,6 +50,8 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         scheduleHelper = ScheduleHelper.getInstance(applicationContext)
 
         schedule = intent.getParcelableExtra(EXTRA_SCHEDULE)
+
+        // TODO error edit kemungkinan sebelum ini
         if (schedule != null) {
             position = intent.getIntExtra(EXTRA_POSITION, 0)
             isEdit = true
