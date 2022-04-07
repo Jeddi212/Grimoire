@@ -1,10 +1,12 @@
 package com.ppb.grimoire.adapter
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.ppb.grimoire.CustomOnItemClickListener
 import com.ppb.grimoire.ScheduleAddUpdateActivity
@@ -12,6 +14,7 @@ import com.ppb.grimoire.databinding.ItemScheduleBinding
 import com.ppb.grimoire.model.Schedule
 
 class ListScheduleAdapter(
+    private val context: Fragment,
 //    private val activity: Activity,
 //    var listSchedule: ArrayList<Schedule>)
 //    private val itemClickListener: OnItemClickListener)
@@ -28,7 +31,7 @@ class ListScheduleAdapter(
         notifyDataSetChanged()
     }
 
-    class ListViewHolder(private val binding: ItemScheduleBinding) :
+    inner class ListViewHolder(private val binding: ItemScheduleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(schedule: Schedule /*, clickListener: OnItemClickListener*/) {
@@ -38,10 +41,16 @@ class ListScheduleAdapter(
                 binding.tvScheduleTitle.setOnClickListener(CustomOnItemClickListener(
                     adapterPosition, object : CustomOnItemClickListener.OnItemClickCallback {
                     override fun onItemClicked(view: View, position: Int) {
-                        val intent = Intent(Activity(), ScheduleAddUpdateActivity::class.java)
+
+                        // TODO activity disini nya mungkin
+                        val intent = Intent(context.requireContext(), ScheduleAddUpdateActivity::class.java)
+
                         intent.putExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, position)
                         intent.putExtra(ScheduleAddUpdateActivity.EXTRA_SCHEDULE, schedule)
-                        Activity().startActivityForResult(intent, ScheduleAddUpdateActivity.REQUEST_UPDATE)
+
+                        // TODO disini errornyaaaaaa
+                        context.startActivityForResult(intent, ScheduleAddUpdateActivity.REQUEST_UPDATE)
+
                     }
                 }))
             }

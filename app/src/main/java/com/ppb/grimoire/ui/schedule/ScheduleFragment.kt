@@ -110,7 +110,7 @@ class ScheduleFragment : Fragment() {
 
     private fun showRecyclerList() {
         binding.rvSchedule.layoutManager = LinearLayoutManager(context)
-        listScheduleAdapter = ListScheduleAdapter()
+        listScheduleAdapter = ListScheduleAdapter(this)
         binding.rvSchedule.adapter = listScheduleAdapter
     }
 

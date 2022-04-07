@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -111,6 +112,8 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             values.put(DatabaseContract.ScheduleColumns.PERSON_ID, personId)
             values.put(DatabaseContract.ScheduleColumns.DATE, clickedDate)
 
+            Log.i("UPDATE", "HAMPIR IF isEdit SAUA 115 | $isEdit")
+
             if (isEdit) {
                 val result = scheduleHelper.update(schedule?.id.toString(), values).toLong()
 
@@ -152,9 +155,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
             }
-
         }
     }
 
@@ -184,7 +185,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
         if (isDialogClose) {
             dialogTitle = "Cancel Edit"
-            dialogMessage = "Do you wish to exit and cancel edit reminder?"
+            dialogMessage = "Do you wish to exit and cancel?"
         } else {
             dialogTitle = "Delete Reminder"
             dialogMessage = "Do you really want to delete this reminder?"
