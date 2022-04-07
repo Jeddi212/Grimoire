@@ -1,18 +1,16 @@
 package com.ppb.grimoire
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.ppb.grimoire.adapter.News
 import com.ppb.grimoire.databinding.ItemNewsBinding
 
 class ListNewsAdapter(private val listNews: ArrayList<News>, val itemClickListener: OnItemClickListener): RecyclerView.Adapter<ListNewsAdapter.ListViewHolder>(){
     inner class ListViewHolder(private val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(news:News, clickListener: OnItemClickListener) {
+        fun bind(news: News, clickListener: OnItemClickListener) {
             with(binding){
                 Glide.with(itemView.context)
                     .load(news.photo)
