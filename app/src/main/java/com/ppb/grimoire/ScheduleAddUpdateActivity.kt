@@ -2,16 +2,17 @@ package com.ppb.grimoire
 
 import android.content.ContentValues
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.CalendarView
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.ppb.grimoire.db.DatabaseContract
 import com.ppb.grimoire.db.ScheduleHelper
@@ -25,12 +26,15 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private var schedule: Schedule? = null
     private var position: Int = 0
     private var clickedDate: String? = null
+    private var clickedDateLong: Long = 0
     private lateinit var scheduleHelper: ScheduleHelper
     private lateinit var edt_title : EditText
     private lateinit var btn_submit : Button
+    private lateinit var cv : CalendarView
 
     companion object {
         const val EXTRA_DATE = "extra_date"
+        const val EXTRA_DATE_LONG = "extra_date_long"
         const val EXTRA_SCHEDULE = "extra_schedule"
         const val EXTRA_POSITION = "extra_position"
         const val REQUEST_ADD = 100
@@ -48,11 +52,22 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
         edt_title = findViewById(R.id.edt_title)
         btn_submit = findViewById(R.id.btn_submit)
+        cv = findViewById(R.id.calendarAU)
+
+        cv.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            clickedDate = getClickedDate(year, month, dayOfMonth)
+        }
 
         scheduleHelper = ScheduleHelper.getInstance(applicationContext)
 
         schedule = intent.getParcelableExtra(EXTRA_SCHEDULE)
         clickedDate = intent.getStringExtra(EXTRA_DATE)
+        clickedDateLong = intent.getLongExtra(EXTRA_DATE_LONG, 0)
+
+        // Set focused date from schedule fragment
+//        cv.setDate(SimpleDateFormat("d/M/yyyy").parse(clickedDate).time, true, true)
+        Log.i("JEDDI", "LONG DATE ::: $clickedDateLong")
+        if (clickedDateLong > 0) cv.date = clickedDateLong
 
         // TODO error edit kemungkinan sebelum ini
         if (schedule != null) {
@@ -99,10 +114,10 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
             schedule?.title = title
             schedule?.personId = personId
-            schedule?.date = clickedDate
 
             // TODO Sampe sini masuk
 //            edt_title.setText(title)
+
             Log.i("JEDDI", "SAUA 106 title ::: | $title")
 
             val intent = Intent()
@@ -112,6 +127,11 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             val values = ContentValues()
             values.put(DatabaseContract.ScheduleColumns.PERSON_ID, personId)
             values.put(DatabaseContract.ScheduleColumns.TITLE, title)
+
+            if (clickedDate != null) {
+                schedule?.date = clickedDate
+                values.put(DatabaseContract.ScheduleColumns.DATE, clickedDate)
+            }
 
             Log.i("JEDDI", "HAMPIR IF isEdit SAUA 117 | $isEdit")
             Log.i("JEDDI", "Clicked Date SAUA 118 | $clickedDate")
@@ -137,7 +157,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             } else {
 //                schedule?.date = getCurrentDate()
 //                values.put(DatabaseContract.ScheduleColumns.DATE, getCurrentDate())
-                values.put(DatabaseContract.ScheduleColumns.DATE, clickedDate)
+
 
                 val result = scheduleHelper.insert(values)
 
@@ -236,5 +256,12 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         val date = Date()
 
         return dateFormat.format(date)
+    }
+
+    private fun getClickedDate(year: Int, month: Int, dayOfMonth: Int): String {
+
+        return dayOfMonth.toString() +
+                "/" + (month + 1).toString() +
+                "/" + year.toString()
     }
 }

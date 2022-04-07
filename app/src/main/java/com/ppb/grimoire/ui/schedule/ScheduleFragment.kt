@@ -33,7 +33,8 @@ private const val ARG_PARAM2 = "param2"
 class ScheduleFragment : Fragment() {
     private lateinit var binding: FragmentScheduleBinding
     private var listSchedule = ArrayList<Schedule>()
-    private var clickedDate = getCurrentDate()
+    private lateinit var clickedDate: String
+    private var clickedDateLong: Long = 0
 
     private lateinit var personId: String
 
@@ -55,6 +56,8 @@ class ScheduleFragment : Fragment() {
         val account = GoogleSignIn.getLastSignedInAccount(requireContext())
         personId = account?.id.toString()
 
+        clickedDate = getCurrentDate()
+
         binding = FragmentScheduleBinding.inflate(layoutInflater)
 
         // Floating action Bar, move to new activity
@@ -63,6 +66,7 @@ class ScheduleFragment : Fragment() {
 
             // Ngirim date yang di click ke activity insert schedule
             intent.putExtra(ScheduleAddUpdateActivity.EXTRA_DATE, clickedDate)
+            intent.putExtra(ScheduleAddUpdateActivity.EXTRA_DATE_LONG, binding.calendar.date)
 
             startActivityForResult(intent, ScheduleAddUpdateActivity.REQUEST_ADD)
         }
