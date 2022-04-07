@@ -11,7 +11,7 @@
 
     <string name="nameTextView">%1$s</string>
     <string name="hello">Hello</string>
-  
+
     <string-array name="schedule_item">
         <item>Belanja Sayur 🍅</item>
         <item>Nugas Android 💻</item>
@@ -73,5 +73,11 @@
     <string name="server_client_id">560697910330-1t925hk0gihm4v2n9uh7ro3mtogsbc06.apps.googleusercontent.com</string>
     <string name="sign_out">Sign Out</string>
     <string name="your_name">Your Name</string>
+
+    <string name="title">Judul</string>
+    <string name="description">Deskripsi</string>
+    <string name="submit">Submit</string>
+    <string name="delete">Hapus</string>
+    <string name="date">Date</string>
 
 </resources>

@@ -5,5 +5,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Schedule(
-    var title: String
+    var id: Int = 0,
+    var personId: String? = null,
+    var title: String? = null,
+    var date: String? = null
 ) : Parcelable

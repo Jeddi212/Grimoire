@@ -1,29 +1,48 @@
 package com.ppb.grimoire.ui.schedule
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.material.snackbar.Snackbar
 import com.ppb.grimoire.R
+import com.ppb.grimoire.ScheduleAddUpdateActivity
 import com.ppb.grimoire.adapter.ListScheduleAdapter
 import com.ppb.grimoire.databinding.FragmentScheduleBinding
+import com.ppb.grimoire.db.ScheduleHelper
+import com.ppb.grimoire.helper.MappingHelper
 import com.ppb.grimoire.model.Schedule
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
-
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 class ScheduleFragment : Fragment() {
     private lateinit var binding: FragmentScheduleBinding
-    private val listSchedule = ArrayList<Schedule>()
+    private var listSchedule = ArrayList<Schedule>()
+    private lateinit var clickedDate: String
+    private var clickedDateLong: Long = 0
 
-    // TODO: Rename and change types of parameters
+    private lateinit var personId: String
+
+    // Disini adapter nya make yang lama, bukan yang 'adapter'
+//    private lateinit var adapter: ListScheduleAdapter
+    private lateinit var scheduleHelper: ScheduleHelper
+    lateinit var listScheduleAdapter: ListScheduleAdapter
+
     private var param1: String? = null
     private var param2: String? = null
 
@@ -34,7 +53,40 @@ class ScheduleFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
+        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+        personId = account?.id.toString()
+
+        clickedDate = getCurrentDate()
+
         binding = FragmentScheduleBinding.inflate(layoutInflater)
+
+        // Floating action Bar, move to new activity
+        binding.fabAdd.setOnClickListener {
+            val intent = Intent(context, ScheduleAddUpdateActivity::class.java)
+
+            // Ngirim date yang di click ke activity insert schedule
+            intent.putExtra(ScheduleAddUpdateActivity.EXTRA_DATE, clickedDate)
+            intent.putExtra(ScheduleAddUpdateActivity.EXTRA_DATE_LONG, binding.calendar.date)
+
+            startActivityForResult(intent, ScheduleAddUpdateActivity.REQUEST_ADD)
+        }
+
+        scheduleHelper = ScheduleHelper.getInstance(requireContext())
+        // TODO ini bikin error
+//        scheduleHelper = ScheduleHelper.getInstance(Activity().applicationContext)
+        scheduleHelper.open()
+
+        // TODO rotate layar masih exit aja !!
+        if (savedInstanceState == null) {
+            // proses ambil data
+            // TODO ini bikin error, eh tapi engga juga deng
+            loadScheduleAsync()
+        } else {
+            val list = savedInstanceState.getParcelableArrayList<Schedule>(EXTRA_STATE)
+            if (list != null) {
+                listScheduleAdapter.listSchedule = list
+            }
+        }
     }
 
     override fun onCreateView(
@@ -43,16 +95,16 @@ class ScheduleFragment : Fragment() {
     ): View {
         binding.rvSchedule.setHasFixedSize(true)
 
-        listSchedule.addAll(getListSchedule(convertDate(binding.calendar.date)))
         showRecyclerList()
 
         binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
             showDateText(year, month, dayOfMonth)
 
-            val clickedDate = getClickedDate(year, month, dayOfMonth)
+            clickedDate = getClickedDate(year, month, dayOfMonth)
 
             listSchedule.clear()
-            listSchedule.addAll(getListSchedule(clickedDate))
+            loadScheduleAsync()
+            listSchedule.addAll(listScheduleAdapter.listSchedule)
 
             showRecyclerList()
         }
@@ -63,7 +115,7 @@ class ScheduleFragment : Fragment() {
 
     private fun showRecyclerList() {
         binding.rvSchedule.layoutManager = LinearLayoutManager(context)
-        val listScheduleAdapter = ListScheduleAdapter(listSchedule)
+        listScheduleAdapter = ListScheduleAdapter(this)
         binding.rvSchedule.adapter = listScheduleAdapter
     }
 
@@ -75,12 +127,11 @@ class ScheduleFragment : Fragment() {
         binding.tvDate?.text = dateString
     }
 
-    private fun getClickedDate(year: Int, month: Int, dayOfMonth: Int) : String {
-        val dateString = dayOfMonth.toString() +
+    private fun getClickedDate(year: Int, month: Int, dayOfMonth: Int): String {
+
+        return dayOfMonth.toString() +
                 "/" + (month + 1).toString() +
                 "/" + year.toString()
-
-        return dateString
     }
 
     private fun convertDate(dateInMilliseconds: Long): String {
@@ -98,11 +149,106 @@ class ScheduleFragment : Fragment() {
         val lSch = ArrayList<Schedule>()
 
         for (i in dataSchedule.indices) {
-            val sch = Schedule(dataSchedule[i])
+            val sch = Schedule()
+            sch.title = dataSchedule[i]
+//            sch.personId = ?
+            sch.date = date
             lSch.add(sch)
         }
 
         return lSch
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scheduleHelper.close()
+    }
+
+    private fun showSnackbarMessage(message: String) {
+        Snackbar.make(binding.rvSchedule, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null) {
+            when (requestCode) {
+                ScheduleAddUpdateActivity.REQUEST_ADD -> if (resultCode ==
+                    ScheduleAddUpdateActivity.RESULT_ADD) {
+                    val schedule = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
+
+                    // Not NULL?
+                    listScheduleAdapter.addItem(schedule!!)
+                    binding.rvSchedule.smoothScrollToPosition(listScheduleAdapter.itemCount - 1)
+
+                    showSnackbarMessage("One item recorded successfully")
+                }
+                ScheduleAddUpdateActivity.REQUEST_UPDATE ->
+                    when (resultCode) {
+                        ScheduleAddUpdateActivity.RESULT_UPDATE -> {
+                            val schedule = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
+
+                            // TODO, disisini get extra positionnya masih bau, ga tau dari dikirim nya
+                            val position = data.getIntExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, 0)
+                            Log.i("JEDDI", "EXTRA POSISITON :: $position")
+
+                            listScheduleAdapter.updateItem(position, schedule!!)
+                            binding.rvSchedule.smoothScrollToPosition(position)
+
+                            showSnackbarMessage("One item updated succesfully")
+                        }
+                        ScheduleAddUpdateActivity.RESULT_DELETE -> {
+                            val position = data.getIntExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, 0)
+
+                            listScheduleAdapter.removeItem(position)
+
+                            showSnackbarMessage("One item deleted successfully")
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun loadScheduleAsync() {
+        GlobalScope.launch(Dispatchers.Main) {
+            binding.progressbar.visibility = View.VISIBLE
+            val deferredSchedule = async(Dispatchers.IO) {
+                val cursor = scheduleHelper.queryByDate(clickedDate, personId)
+                MappingHelper.mapCursorToArrayList(cursor)
+            }
+
+            binding.progressbar.visibility = View.INVISIBLE
+            val schedule = deferredSchedule.await()
+
+            // TODO masuk ke sini
+//            binding.tvDate?.text = schedule[0].title
+
+            if (schedule.size > 0) {
+//                adapter.listSchedule = schedule
+                listScheduleAdapter.listSchedule = schedule
+            } else {
+//                adapter.listSchedule = ArrayList()
+                listScheduleAdapter.listSchedule = ArrayList()
+                showSnackbarMessage("Seems to be empty here, enjoy your day")
+            }
+
+            // TODO masuk juga ke sini ke if true
+//            binding.tvDate?.text = listScheduleAdapter.listSchedule[0].title
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(EXTRA_STATE, listScheduleAdapter.listSchedule)
+    }
+
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("d/M/yyyy",
+            Locale.getDefault())
+        val date = Date()
+
+        return dateFormat.format(date)
     }
 
     companion object {
@@ -114,7 +260,6 @@ class ScheduleFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment ScheduleFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             ScheduleFragment().apply {
@@ -123,5 +268,10 @@ class ScheduleFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+
+        private const val EXTRA_STATE = "EXTRA_STATE"
+
     }
+
 }
