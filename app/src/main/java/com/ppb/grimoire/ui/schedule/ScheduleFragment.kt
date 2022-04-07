@@ -1,5 +1,6 @@
 package com.ppb.grimoire.ui.schedule
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -29,6 +30,7 @@ private const val ARG_PARAM2 = "param2"
 class ScheduleFragment : Fragment() {
     private lateinit var binding: FragmentScheduleBinding
     private var listSchedule = ArrayList<Schedule>()
+    private lateinit var clickedDate: String
 
     // Disini adapter nya make yang lama, bukan yang 'adapter'
 //    private lateinit var adapter: ListScheduleAdapter
@@ -47,8 +49,13 @@ class ScheduleFragment : Fragment() {
 
         binding = FragmentScheduleBinding.inflate(layoutInflater)
 
+        // Floating action Bar, move to new activity
         binding.fabAdd.setOnClickListener {
             val intent = Intent(context, ScheduleAddUpdateActivity::class.java)
+
+            // Ngirim date yang di click ke activity insert schedule
+            intent.putExtra(ScheduleAddUpdateActivity.EXTRA_DATE, clickedDate)
+
             startActivityForResult(intent, ScheduleAddUpdateActivity.REQUEST_ADD)
         }
 
@@ -81,7 +88,7 @@ class ScheduleFragment : Fragment() {
         binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
             showDateText(year, month, dayOfMonth)
 
-            val clickedDate = getClickedDate(year, month, dayOfMonth)
+            clickedDate = getClickedDate(year, month, dayOfMonth)
 
             listSchedule.clear()
             loadScheduleAsync()
@@ -243,4 +250,5 @@ class ScheduleFragment : Fragment() {
         private const val EXTRA_STATE = "EXTRA_STATE"
 
     }
+
 }

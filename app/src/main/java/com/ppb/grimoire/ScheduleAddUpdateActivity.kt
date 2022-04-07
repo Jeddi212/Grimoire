@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.ppb.grimoire.db.DatabaseContract
-import com.ppb.grimoire.db.DatabaseContract.ScheduleColumns.Companion.DATE
 import com.ppb.grimoire.db.ScheduleHelper
 import com.ppb.grimoire.model.Schedule
 import java.text.SimpleDateFormat
@@ -24,11 +23,13 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private var isEdit = false
     private var schedule: Schedule? = null
     private var position: Int = 0
+    private var clickedDate: String? = null
     private lateinit var scheduleHelper: ScheduleHelper
     private lateinit var edt_title : EditText
     private lateinit var btn_submit : Button
 
     companion object {
+        const val EXTRA_DATE = "extra_date"
         const val EXTRA_SCHEDULE = "extra_schedule"
         const val EXTRA_POSITION = "extra_position"
         const val REQUEST_ADD = 100
@@ -50,6 +51,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         scheduleHelper = ScheduleHelper.getInstance(applicationContext)
 
         schedule = intent.getParcelableExtra(EXTRA_SCHEDULE)
+        clickedDate = intent.getStringExtra(EXTRA_DATE)
 
         // TODO error edit kemungkinan sebelum ini
         if (schedule != null) {
@@ -96,6 +98,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
             schedule?.title = title
             schedule?.personId = personId
+            schedule?.date = clickedDate
 
             // TODO Sampe sini masuk
 //            edt_title.setText(account?.id.toString())
@@ -106,6 +109,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             val values = ContentValues()
             values.put(DatabaseContract.ScheduleColumns.TITLE, title)
             values.put(DatabaseContract.ScheduleColumns.PERSON_ID, personId)
+            values.put(DatabaseContract.ScheduleColumns.DATE, clickedDate)
 
             if (isEdit) {
                 val result = scheduleHelper.update(schedule?.id.toString(), values).toLong()
@@ -121,10 +125,9 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                     ).show()
                 }
             } else {
-                schedule?.date = getCurrentDate()
-                values.put(DATE, getCurrentDate())
+//                schedule?.date = getCurrentDate()
+//                values.put(DatabaseContract.ScheduleColumns.DATE, getCurrentDate())
 
-                // TODO insert ke db masih ERRORRRRRR !!
                 val result = scheduleHelper.insert(values)
 
                 // TODO sampe sini masuk
@@ -193,7 +196,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         alertDialogBuilder
             .setMessage(dialogMessage)
             .setCancelable(false)
-            .setPositiveButton("Ya") { dialog, id ->
+            .setPositiveButton("Yes") { dialog, id ->
                 if (isDialogClose) {
                     finish()
                 } else {
