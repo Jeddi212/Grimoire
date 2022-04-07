@@ -1,6 +1,5 @@
 package com.ppb.grimoire.ui.schedule
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -9,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
 import com.ppb.grimoire.R
 import com.ppb.grimoire.ScheduleAddUpdateActivity
@@ -21,6 +21,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,7 +32,9 @@ private const val ARG_PARAM2 = "param2"
 class ScheduleFragment : Fragment() {
     private lateinit var binding: FragmentScheduleBinding
     private var listSchedule = ArrayList<Schedule>()
-    private lateinit var clickedDate: String
+    private var clickedDate = getCurrentDate()
+
+    private lateinit var personId: String
 
     // Disini adapter nya make yang lama, bukan yang 'adapter'
 //    private lateinit var adapter: ListScheduleAdapter
@@ -46,6 +50,9 @@ class ScheduleFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
+        personId = account?.id.toString()
 
         binding = FragmentScheduleBinding.inflate(layoutInflater)
 
@@ -199,7 +206,7 @@ class ScheduleFragment : Fragment() {
         GlobalScope.launch(Dispatchers.Main) {
             binding.progressbar.visibility = View.VISIBLE
             val deferredSchedule = async(Dispatchers.IO) {
-                val cursor = scheduleHelper.queryAll()
+                val cursor = scheduleHelper.queryByDate(clickedDate, personId)
                 MappingHelper.mapCursorToArrayList(cursor)
             }
 
@@ -226,6 +233,14 @@ class ScheduleFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(EXTRA_STATE, listScheduleAdapter.listSchedule)
+    }
+
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("d/M/yyyy",
+            Locale.getDefault())
+        val date = Date()
+
+        return dateFormat.format(date)
     }
 
     companion object {

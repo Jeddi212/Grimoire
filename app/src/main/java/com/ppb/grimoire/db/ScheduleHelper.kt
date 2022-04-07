@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.ppb.grimoire.db.DatabaseContract.ScheduleColumns.Companion.TABLE_NAME
 import com.ppb.grimoire.db.DatabaseContract.ScheduleColumns.Companion._ID
 import java.sql.SQLException
@@ -61,6 +62,19 @@ class ScheduleHelper(context: Context) {
             null,
             "_ID = ?",
             arrayOf(id),
+            null,
+            null,
+            null,
+            null
+        )
+    }
+
+    fun queryByDate(date: String, personId: String): Cursor {
+        return database.query(
+            DATABASE_TABLE,
+            null,
+            "date = ? AND person_id = ?",
+            arrayOf(date, personId),
             null,
             null,
             null,
