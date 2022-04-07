@@ -3,6 +3,7 @@ package com.ppb.grimoire.ui.schedule
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -183,7 +184,10 @@ class ScheduleFragment : Fragment() {
                     when (resultCode) {
                         ScheduleAddUpdateActivity.RESULT_UPDATE -> {
                             val schedule = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
+
+                            // TODO, disisini get extra positionnya masih bau, ga tau dari dikirim nya
                             val position = data.getIntExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, 0)
+                            Log.i("JEDDI", "EXTRA POSISITON :: $position")
 
                             listScheduleAdapter.updateItem(position, schedule!!)
                             binding.rvSchedule.smoothScrollToPosition(position)

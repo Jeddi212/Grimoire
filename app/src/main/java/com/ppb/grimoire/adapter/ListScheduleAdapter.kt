@@ -1,8 +1,7 @@
 package com.ppb.grimoire.adapter
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +43,8 @@ class ListScheduleAdapter(
 
                         // TODO activity disini nya mungkin
                         val intent = Intent(context.requireContext(), ScheduleAddUpdateActivity::class.java)
+
+                        Log.i("JEDDI", "Kiriman ExtraPos ::::: $position")
 
                         intent.putExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, position)
                         intent.putExtra(ScheduleAddUpdateActivity.EXTRA_SCHEDULE, schedule)

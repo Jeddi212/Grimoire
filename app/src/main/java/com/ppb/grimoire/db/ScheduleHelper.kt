@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.ppb.grimoire.db.DatabaseContract.ScheduleColumns.Companion.TABLE_NAME
 import com.ppb.grimoire.db.DatabaseContract.ScheduleColumns.Companion._ID
@@ -87,6 +88,10 @@ class ScheduleHelper(context: Context) {
     }
 
     fun update(id: String, values: ContentValues?): Int {
+        Log.i("JEDDI", "idnya di update method ::: $id")
+        Log.i("JEDDI", "Content values ::: $values")
+
+        // TODO, ERROR UPDATE DISINI RUPANYA WOY
         return database.update(DATABASE_TABLE, values, "$_ID = ?", arrayOf(id))
     }
 

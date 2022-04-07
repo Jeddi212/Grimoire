@@ -102,20 +102,27 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             schedule?.date = clickedDate
 
             // TODO Sampe sini masuk
-//            edt_title.setText(account?.id.toString())
+//            edt_title.setText(title)
+            Log.i("JEDDI", "SAUA 106 title ::: | $title")
 
             val intent = Intent()
             intent.putExtra(EXTRA_SCHEDULE, schedule)
+            intent.putExtra(EXTRA_POSITION, position)
 
             val values = ContentValues()
-            values.put(DatabaseContract.ScheduleColumns.TITLE, title)
             values.put(DatabaseContract.ScheduleColumns.PERSON_ID, personId)
-            values.put(DatabaseContract.ScheduleColumns.DATE, clickedDate)
+            values.put(DatabaseContract.ScheduleColumns.TITLE, title)
 
-            Log.i("UPDATE", "HAMPIR IF isEdit SAUA 115 | $isEdit")
+            Log.i("JEDDI", "HAMPIR IF isEdit SAUA 117 | $isEdit")
+            Log.i("JEDDI", "Clicked Date SAUA 118 | $clickedDate")
 
             if (isEdit) {
+                Log.i("JEDDI", "AFTER IF isEdit SAUA 118 | $isEdit")
+
+                // TODO disini errornya bosque
                 val result = scheduleHelper.update(schedule?.id.toString(), values).toLong()
+
+                Log.i("JEDDI", "Result from UPDATE ::: | $position")
 
                 if (result > 0) {
                     setResult(RESULT_UPDATE, intent)
@@ -130,6 +137,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             } else {
 //                schedule?.date = getCurrentDate()
 //                values.put(DatabaseContract.ScheduleColumns.DATE, getCurrentDate())
+                values.put(DatabaseContract.ScheduleColumns.DATE, clickedDate)
 
                 val result = scheduleHelper.insert(values)
 
