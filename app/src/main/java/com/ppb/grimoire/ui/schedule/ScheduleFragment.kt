@@ -34,12 +34,9 @@ class ScheduleFragment : Fragment() {
     private lateinit var binding: FragmentScheduleBinding
     private var listSchedule = ArrayList<Schedule>()
     private lateinit var clickedDate: String
-    private var clickedDateLong: Long = 0
 
     private lateinit var personId: String
 
-    // Disini adapter nya make yang lama, bukan yang 'adapter'
-//    private lateinit var adapter: ListScheduleAdapter
     private lateinit var scheduleHelper: ScheduleHelper
     lateinit var listScheduleAdapter: ListScheduleAdapter
 
@@ -73,14 +70,9 @@ class ScheduleFragment : Fragment() {
         }
 
         scheduleHelper = ScheduleHelper.getInstance(requireContext())
-        // TODO ini bikin error
-//        scheduleHelper = ScheduleHelper.getInstance(Activity().applicationContext)
         scheduleHelper.open()
 
-        // TODO rotate layar masih exit aja !!
         if (savedInstanceState == null) {
-            // proses ambil data
-            // TODO ini bikin error, eh tapi engga juga deng
             loadScheduleAsync()
         } else {
             val list = savedInstanceState.getParcelableArrayList<Schedule>(EXTRA_STATE)
@@ -116,7 +108,6 @@ class ScheduleFragment : Fragment() {
 
     private fun showRecyclerList() {
         binding.rvSchedule.layoutManager = LinearLayoutManager(context)
-//        listScheduleAdapter = ListScheduleAdapter(this)
         binding.rvSchedule.adapter = listScheduleAdapter
     }
 
@@ -135,30 +126,6 @@ class ScheduleFragment : Fragment() {
                 "/" + year.toString()
     }
 
-    private fun convertDate(dateInMilliseconds: Long): String {
-        val dateFormat = "d/M/yyyy"
-        return DateFormat.format(dateFormat, dateInMilliseconds).toString()
-    }
-
-    private fun getListSchedule(date: String) : ArrayList<Schedule> {
-        val dataSchedule = if (date == "6/4/2022") {
-            resources.getStringArray(R.array.schedule_item)
-        } else {
-            resources.getStringArray(R.array.schedule_item2)
-        }
-
-        val lSch = ArrayList<Schedule>()
-
-        for (i in dataSchedule.indices) {
-            val sch = Schedule()
-            sch.title = dataSchedule[i]
-//            sch.personId = ?
-            sch.date = date
-            lSch.add(sch)
-        }
-
-        return lSch
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -190,9 +157,7 @@ class ScheduleFragment : Fragment() {
                         ScheduleAddUpdateActivity.RESULT_UPDATE -> {
                             val schedule = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
 
-                            // TODO, disisini get extra positionnya masih bau, ga tau dari dikirim nya
                             val position = data.getIntExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, 0)
-                            Log.i("JEDDI", "EXTRA POSISITON :: $position")
 
                             listScheduleAdapter.updateItem(position, schedule!!)
                             binding.rvSchedule.smoothScrollToPosition(position)
@@ -222,20 +187,12 @@ class ScheduleFragment : Fragment() {
             binding.progressbar.visibility = View.INVISIBLE
             val schedule = deferredSchedule.await()
 
-            // TODO masuk ke sini
-//            binding.tvDate?.text = schedule[0].title
-
             if (schedule.size > 0) {
-//                adapter.listSchedule = schedule
                 listScheduleAdapter.listSchedule = schedule
             } else {
-//                adapter.listSchedule = ArrayList()
                 listScheduleAdapter.listSchedule = ArrayList()
                 showSnackbarMessage("Seems to be empty here, enjoy your day")
             }
-
-            // TODO masuk juga ke sini ke if true
-//            binding.tvDate?.text = listScheduleAdapter.listSchedule[0].title
         }
     }
 

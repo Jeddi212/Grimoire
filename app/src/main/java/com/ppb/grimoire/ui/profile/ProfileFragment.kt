@@ -60,7 +60,6 @@ class ProfileFragment : Fragment(), View.OnClickListener {
             var personEmail = acct.email.toString()
             var personId = acct.id.toString()
             var personPhoto = acct.photoUrl
-            Log.d("id",personId)
             user = User(personName,personGivenName,personFamilyName,personEmail,personId, personPhoto)
         }
         Log.d("id",user.personId)

@@ -33,14 +33,10 @@ private const val ARG_PARAM2 = "param2"
 
 class TodayFragment : Fragment() {
     private lateinit var binding: FragmentTodayBinding
-    private var listSchedule = ArrayList<Schedule>()
     private lateinit var clickedDate: String
-    private var clickedDateLong: Long = 0
 
     private lateinit var personId: String
 
-    // Disini adapter nya make yang lama, bukan yang 'adapter'
-//    private lateinit var adapter: ListScheduleAdapter
     private lateinit var scheduleHelper: ScheduleHelper
     lateinit var listScheduleAdapter: ListScheduleAdapter
 
@@ -48,7 +44,6 @@ class TodayFragment : Fragment() {
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("1","1")
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -63,14 +58,11 @@ class TodayFragment : Fragment() {
         binding = FragmentTodayBinding.inflate(layoutInflater)
 
         scheduleHelper = ScheduleHelper.getInstance(requireContext())
-        // TODO ini bikin error
-//        scheduleHelper = ScheduleHelper.getInstance(Activity().applicationContext)
         scheduleHelper.open()
 
         // TODO rotate layar masih exit aja !!
         if (savedInstanceState == null) {
             // proses ambil data
-            // TODO ini bikin error, eh tapi engga juga deng
             loadScheduleAsync()
         } else {
             val list = savedInstanceState.getParcelableArrayList<Schedule>(EXTRA_STATE)
@@ -78,7 +70,6 @@ class TodayFragment : Fragment() {
                 listScheduleAdapter.listSchedule = list
             }
         }
-        Log.d("a","a")
     }
 
     override fun onCreateView(
@@ -88,16 +79,13 @@ class TodayFragment : Fragment() {
         binding.rvToday.setHasFixedSize(true)
 
         showRecyclerList()
-        Log.d("b","b")
         // Inflate the layout for this fragment
         return binding.root
     }
 
     private fun showRecyclerList() {
         binding.rvToday.layoutManager = LinearLayoutManager(context)
-//        listScheduleAdapter = ListScheduleAdapter(this)
         binding.rvToday.adapter = listScheduleAdapter
-        Log.d("c","c")
     }
 
     override fun onDestroy() {
@@ -106,14 +94,12 @@ class TodayFragment : Fragment() {
     }
 
     private fun showSnackbarMessage(message: String) {
-        Log.d("d","d")
         Snackbar.make(binding.rvToday, message, Snackbar.LENGTH_SHORT).show()
     }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("e","e")
 
         if (data != null) {
             when (requestCode) {
@@ -132,9 +118,7 @@ class TodayFragment : Fragment() {
                         ScheduleAddUpdateActivity.RESULT_UPDATE -> {
                             val schedule = data.getParcelableExtra<Schedule>(ScheduleAddUpdateActivity.EXTRA_SCHEDULE)
 
-                            // TODO, disisini get extra positionnya masih bau, ga tau dari dikirim nya
                             val position = data.getIntExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, 0)
-                            Log.i("JEDDI", "EXTRA POSISITON :: $position")
 
                             listScheduleAdapter.updateItem(position, schedule!!)
                             binding.rvToday.smoothScrollToPosition(position)
@@ -164,34 +148,19 @@ class TodayFragment : Fragment() {
             binding.progressbar.visibility = View.INVISIBLE
             val schedule = deferredSchedule.await()
 
-            // TODO masuk ke sini
-//            binding.tvDate?.text = schedule[0].title
-
             if (schedule.size > 0) {
-//                adapter.listSchedule = schedule
                 listScheduleAdapter.listSchedule = schedule
             } else {
-//                adapter.listSchedule = ArrayList()
                 listScheduleAdapter.listSchedule = ArrayList()
                 showSnackbarMessage("Seems to be empty here, enjoy your day")
             }
 
-            // TODO masuk juga ke sini ke if true
-//            binding.tvDate?.text = listScheduleAdapter.listSchedule[0].title
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(EXTRA_STATE, listScheduleAdapter.listSchedule)
-    }
-
-    private fun getCurrentDate(): String {
-        val dateFormat = SimpleDateFormat("d/M/yyyy",
-            Locale.getDefault())
-        val date = Date()
-
-        return dateFormat.format(date)
     }
 
     companion object {
