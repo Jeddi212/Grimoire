@@ -52,6 +52,7 @@ class ScheduleFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        listScheduleAdapter = ListScheduleAdapter(this)
 
         val account = GoogleSignIn.getLastSignedInAccount(requireContext())
         personId = account?.id.toString()
@@ -115,7 +116,7 @@ class ScheduleFragment : Fragment() {
 
     private fun showRecyclerList() {
         binding.rvSchedule.layoutManager = LinearLayoutManager(context)
-        listScheduleAdapter = ListScheduleAdapter(this)
+//        listScheduleAdapter = ListScheduleAdapter(this)
         binding.rvSchedule.adapter = listScheduleAdapter
     }
 

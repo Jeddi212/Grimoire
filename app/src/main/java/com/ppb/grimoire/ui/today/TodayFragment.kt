@@ -54,7 +54,7 @@ class TodayFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
+        listScheduleAdapter = ListScheduleAdapter(this)
         val account = GoogleSignIn.getLastSignedInAccount(requireContext())
         personId = account?.id.toString()
 
@@ -95,7 +95,7 @@ class TodayFragment : Fragment() {
 
     private fun showRecyclerList() {
         binding.rvToday.layoutManager = LinearLayoutManager(context)
-        listScheduleAdapter = ListScheduleAdapter(this)
+//        listScheduleAdapter = ListScheduleAdapter(this)
         binding.rvToday.adapter = listScheduleAdapter
         Log.d("c","c")
     }
@@ -106,12 +106,14 @@ class TodayFragment : Fragment() {
     }
 
     private fun showSnackbarMessage(message: String) {
+        Log.d("d","d")
         Snackbar.make(binding.rvToday, message, Snackbar.LENGTH_SHORT).show()
     }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d("e","e")
 
         if (data != null) {
             when (requestCode) {
