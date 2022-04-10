@@ -14,7 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.ppb.grimoire.R
-import com.ppb.grimoire.adapter.User
+import com.ppb.grimoire.model.User
 import com.ppb.grimoire.databinding.FragmentProfileBinding
 
 // TODO: Rename parameter arguments, choose names that match

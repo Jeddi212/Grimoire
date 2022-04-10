@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import com.ppb.grimoire.*
-import com.ppb.grimoire.adapter.News
+import com.ppb.grimoire.model.News
 import com.ppb.grimoire.databinding.FragmentNewsBinding
 import cz.msebera.android.httpclient.Header
 import org.json.JSONArray
