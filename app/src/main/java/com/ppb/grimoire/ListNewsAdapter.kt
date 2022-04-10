@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.ppb.grimoire.adapter.News
+import com.ppb.grimoire.model.News
 import com.ppb.grimoire.databinding.ItemNewsBinding
 
 class ListNewsAdapter(private val listNews: ArrayList<News>, val itemClickListener: OnItemClickListener): RecyclerView.Adapter<ListNewsAdapter.ListViewHolder>(){
