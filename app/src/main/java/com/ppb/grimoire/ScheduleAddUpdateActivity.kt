@@ -65,11 +65,8 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         clickedDateLong = intent.getLongExtra(EXTRA_DATE_LONG, 0)
 
         // Set focused date from schedule fragment
-//        cv.setDate(SimpleDateFormat("d/M/yyyy").parse(clickedDate).time, true, true)
-        Log.i("JEDDI", "LONG DATE ::: $clickedDateLong")
         if (clickedDateLong > 0) cv.date = clickedDateLong
 
-        // TODO error edit kemungkinan sebelum ini
         if (schedule != null) {
             position = intent.getIntExtra(EXTRA_POSITION, 0)
             isEdit = true
@@ -115,11 +112,6 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             schedule?.title = title
             schedule?.personId = personId
 
-            // TODO Sampe sini masuk
-//            edt_title.setText(title)
-
-            Log.i("JEDDI", "SAUA 106 title ::: | $title")
-
             val intent = Intent()
             intent.putExtra(EXTRA_SCHEDULE, schedule)
             intent.putExtra(EXTRA_POSITION, position)
@@ -133,16 +125,9 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 values.put(DatabaseContract.ScheduleColumns.DATE, clickedDate)
             }
 
-            Log.i("JEDDI", "HAMPIR IF isEdit SAUA 117 | $isEdit")
-            Log.i("JEDDI", "Clicked Date SAUA 118 | $clickedDate")
 
             if (isEdit) {
-                Log.i("JEDDI", "AFTER IF isEdit SAUA 118 | $isEdit")
-
-                // TODO disini errornya bosque
                 val result = scheduleHelper.update(schedule?.id.toString(), values).toLong()
-
-                Log.i("JEDDI", "Result from UPDATE ::: | $position")
 
                 if (result > 0) {
                     setResult(RESULT_UPDATE, intent)
@@ -155,26 +140,11 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                     ).show()
                 }
             } else {
-//                schedule?.date = getCurrentDate()
-//                values.put(DatabaseContract.ScheduleColumns.DATE, getCurrentDate())
-
-
                 val result = scheduleHelper.insert(values)
-
-                // TODO sampe sini masuk
-//                edt_title.setText(schedule?.date)
-//                edt_title.setText(values.get(DATE).toString())
-
-                // TODO return nya -1, error ga tau diamana ?
-//                edt_title.setText(result.toString())
 
                 if (result > 0) {
                     schedule?.id = result.toInt()
                     setResult(RESULT_ADD, intent)
-
-                    // TODO ga masuk sini, tapi else
-//                    edt_title.setText(schedule?.id.toString())
-
                     finish()
                 } else {
                     Toast.makeText(
@@ -248,14 +218,6 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
-    }
-
-    private fun getCurrentDate(): String {
-        val dateFormat = SimpleDateFormat("d/M/yyyy",
-        Locale.getDefault())
-        val date = Date()
-
-        return dateFormat.format(date)
     }
 
     private fun getClickedDate(year: Int, month: Int, dayOfMonth: Int): String {

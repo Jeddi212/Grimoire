@@ -14,9 +14,6 @@ import com.ppb.grimoire.model.Schedule
 
 class ListScheduleAdapter(
     private val context: Fragment,
-//    private val activity: Activity,
-//    var listSchedule: ArrayList<Schedule>)
-//    private val itemClickListener: OnItemClickListener)
     )
     : RecyclerView.Adapter<ListScheduleAdapter.ListViewHolder>() {
 
@@ -33,7 +30,7 @@ class ListScheduleAdapter(
     inner class ListViewHolder(private val binding: ItemScheduleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(schedule: Schedule /*, clickListener: OnItemClickListener*/) {
+        fun bind(schedule: Schedule) {
             with(binding) {
                 tvScheduleTitle.text = schedule.title
 
@@ -41,25 +38,16 @@ class ListScheduleAdapter(
                     adapterPosition, object : CustomOnItemClickListener.OnItemClickCallback {
                     override fun onItemClicked(view: View, position: Int) {
 
-                        // TODO activity disini nya mungkin
                         val intent = Intent(context.requireContext(), ScheduleAddUpdateActivity::class.java)
-
-                        Log.i("JEDDI", "Kiriman ExtraPos ::::: $position")
 
                         intent.putExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, position)
                         intent.putExtra(ScheduleAddUpdateActivity.EXTRA_SCHEDULE, schedule)
 
-                        // TODO disini errornyaaaaaa
                         context.startActivityForResult(intent, ScheduleAddUpdateActivity.REQUEST_UPDATE)
 
                     }
                 }))
             }
-
-
-//            itemView.setOnClickListener {
-//                clickListener.onItemClicked(schedule)
-//            }
         }
     }
 
@@ -69,7 +57,6 @@ class ListScheduleAdapter(
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-//        holder.bind(listSchedule[position], itemClickListener)
         holder.bind(listSchedule[position])
     }
 
@@ -91,8 +78,4 @@ class ListScheduleAdapter(
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, this.listSchedule.size)
     }
-}
-
-interface OnItemClickListener{
-    fun onItemClicked(schedule: Schedule)
 }
