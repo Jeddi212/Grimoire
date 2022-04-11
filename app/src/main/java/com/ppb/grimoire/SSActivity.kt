@@ -12,7 +12,7 @@ class SSActivity : AppCompatActivity() {
 
         Handler().postDelayed({ //This method will be executed once the timer is over
             // Start your app main activity
-            val i = Intent(this, LoginActivity::class.java)
+            val i = Intent(this, MainActivity::class.java)
             startActivity(i)
             // close this activity
             finish()
