@@ -4,13 +4,13 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.TABLE_NAME
+import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.TABLE_NAME_NOTE
 import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion._ID
 import java.sql.SQLException
 
 class NoteHelper (context: Context) {
     companion object {
-        private const val DATABASE_TABLE = TABLE_NAME
+        private const val DATABASE_TABLE = TABLE_NAME_NOTE
         private lateinit var dataBaseHelper: DatabaseHelper
         private lateinit var database: SQLiteDatabase
 
