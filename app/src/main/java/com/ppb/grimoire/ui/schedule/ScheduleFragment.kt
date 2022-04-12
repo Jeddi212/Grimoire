@@ -91,7 +91,6 @@ class ScheduleFragment : Fragment() {
         showRecyclerList()
 
         binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            showDateText(year, month, dayOfMonth)
 
             clickedDate = getClickedDate(year, month, dayOfMonth)
 
@@ -109,14 +108,6 @@ class ScheduleFragment : Fragment() {
     private fun showRecyclerList() {
         binding.rvSchedule.layoutManager = LinearLayoutManager(context)
         binding.rvSchedule.adapter = listScheduleAdapter
-    }
-
-    private fun showDateText(year: Int, month: Int, dayOfMonth: Int) {
-        val dateString = dayOfMonth.toString() +
-                "/" + (month + 1).toString() +
-                "/" + year.toString()
-
-        binding.tvDate?.text = dateString
     }
 
     private fun getClickedDate(year: Int, month: Int, dayOfMonth: Int): String {

@@ -79,5 +79,6 @@
     <string name="submit">Submit</string>
     <string name="delete">Hapus</string>
     <string name="date">Date</string>
+    <string name="date_clicked">Date Clicked</string>
 
 </resources>
