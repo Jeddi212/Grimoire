@@ -13,4 +13,14 @@ internal class DatabaseContract {
             const val DATE = "date"
         }
     }
+
+    internal class NoteColumns : BaseColumns {
+        companion object {
+            const val TABLE_NAME_NOTE = "note"
+            const val _ID = "_id"
+            const val TITLE = "title"
+            const val DESCRIPTION = "description"
+            const val DATE = "date"
+        }
+    }
 }
