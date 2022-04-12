@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.ppb.grimoire.db.DatabaseContract.ScheduleColumns.Companion.TABLE_NAME
+import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.TABLE_NAME_NOTE
 
 internal class DatabaseHelper(context: Context) :
 SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -21,7 +22,7 @@ SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
                 " ${DatabaseContract.ScheduleColumns.DATE} TEXT NOT NULL)"
 
 
-        private val SQL_CREATE_TABLE_NOTE = "CREATE TABLE $TABLE_NAME" +
+        private val SQL_CREATE_TABLE_NOTE = "CREATE TABLE $TABLE_NAME_NOTE" +
                 " (${DatabaseContract.NoteColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
                 " ${DatabaseContract.NoteColumns.TITLE} TEXT NOT NULL," +
                 " ${DatabaseContract.NoteColumns.DESCRIPTION} TEXT NOT NULL," +
@@ -37,6 +38,7 @@ SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_NOTE")
         onCreate(db)
     }
 
