@@ -54,14 +54,19 @@ class NotesFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
+        binding = FragmentNotesBinding.inflate(layoutInflater)
+
+        binding.rvNotes.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvNotes.setHasFixedSize(true)
         listNoteAdapter = NoteAdapter(this)
+        binding.rvNotes.adapter = listNoteAdapter
 
         val account = GoogleSignIn.getLastSignedInAccount(requireContext())
         personId = account?.id.toString()
 
-        binding = FragmentNotesBinding.inflate(layoutInflater)
 
-        binding.fabAdd.setOnClickListener {
+
+        binding.fabAddNote.setOnClickListener {
             val intent = Intent(context, NoteAddUpdateActivity::class.java)
             startActivityForResult(intent, NoteAddUpdateActivity.REQUEST_ADD)
         }
@@ -89,7 +94,7 @@ class NotesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notes, container, false)
+        return binding.root
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -121,6 +126,11 @@ class NotesFragment : Fragment() {
             }
         }
     }
+
+//    private fun showRecyclerList() {
+//        binding.rvNotes.L = LinearLayoutManager(context)
+//        binding.rvNotes.adapter = listNoteAdapter
+//    }
 
     private fun showSnackbarMessage(message: String) {
         Snackbar.make(binding.rvNotes, message, Snackbar.LENGTH_SHORT).show()
