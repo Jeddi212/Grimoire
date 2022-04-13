@@ -18,6 +18,10 @@
         tools:targetApi="q">
 
         <activity
+            android:name=".AboutActivity"
+            android:label="About Us"
+            android:exported="false" />
+        <activity
             android:name=".NoteAddUpdateActivity"
             android:exported="false" />
         <activity
