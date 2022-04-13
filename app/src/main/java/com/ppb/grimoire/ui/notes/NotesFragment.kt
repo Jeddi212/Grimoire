@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
@@ -106,7 +107,8 @@ class NotesFragment : Fragment() {
                     val note = data.getParcelableExtra<Note>(NoteAddUpdateActivity.EXTRA_NOTE)
                     listNoteAdapter.addItem(note!!)
                     binding.rvNotes.smoothScrollToPosition(listNoteAdapter.itemCount - 1)
-                    showSnackbarMessage("Satu item berhasil ditambahkan")
+                    Toast.makeText(requireContext(),"One item recorded successfully", Toast.LENGTH_SHORT).show()
+//                    showSnackbarMessage("Satu item berhasil ditambahkan")
                 }
                 NoteAddUpdateActivity.REQUEST_UPDATE ->
                     when (resultCode) {
@@ -115,12 +117,14 @@ class NotesFragment : Fragment() {
                             val position = data.getIntExtra(NoteAddUpdateActivity.EXTRA_POSITION, 0)
                             listNoteAdapter.updateItem(position, note!!)
                             binding.rvNotes.smoothScrollToPosition(position)
-                            showSnackbarMessage("Satu item berhasil diubah")
+                            Toast.makeText(requireContext(),"One item updated succesfully", Toast.LENGTH_SHORT).show()
+//                            showSnackbarMessage("Satu item berhasil diubah")
                         }
                         NoteAddUpdateActivity.RESULT_DELETE -> {
                             val position = data.getIntExtra(NoteAddUpdateActivity.EXTRA_POSITION, 0)
                             listNoteAdapter.removeItem(position)
-                            showSnackbarMessage("Satu item berhasil dihapus")
+                            Toast.makeText(requireContext(),"One item deleted successfully", Toast.LENGTH_SHORT).show()
+//                            showSnackbarMessage("Satu item berhasil dihapus")
                         }
                     }
             }
@@ -154,7 +158,8 @@ class NotesFragment : Fragment() {
                 listNoteAdapter.listNotes = notes
             } else {
                 listNoteAdapter.listNotes = ArrayList()
-                showSnackbarMessage("Tidak ada data saat ini")
+                Toast.makeText(requireContext(),"Note is empty", Toast.LENGTH_SHORT).show()
+//                showSnackbarMessage("Tidak ada data saat ini")
             }
         }
     }
