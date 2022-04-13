@@ -84,4 +84,6 @@
     <string name="this_activity">Ini adalah menu About</string>
     <string name="menu_about">About Us</string>
 
+    <string name="save">Save</string>
+
 </resources>
