@@ -70,7 +70,7 @@
     <string name="news_title">News Title</string>
     <string name="news_description">News Description</string>
 
-    <string name="server_client_id">560697910330-1t925hk0gihm4v2n9uh7ro3mtogsbc06.apps.googleusercontent.com</string>
+    <string name="server_client_id">171728200125-p5k9467quq2dg2ngrv5uh95p39n3eb79.apps.googleusercontent.com</string>
     <string name="sign_out">Sign Out</string>
     <string name="your_name">Your Name</string>
 
@@ -79,6 +79,10 @@
     <string name="submit">Submit</string>
     <string name="delete">Hapus</string>
     <string name="date">Date</string>
+    <string name="date_clicked">Date Clicked</string>
+
+    <string name="this_activity">Ini adalah menu About</string>
+    <string name="menu_about">About Us</string>
 
     <string name="save">Save</string>
 

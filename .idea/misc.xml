@@ -9,6 +9,17 @@
         <entry key="..\:/ITHB/Semester6/PPB/Tubes_Grimoire/Grimoire/app/src/main/res/layout/fragment_schedule.xml" value="0.1" />
         <entry key="..\:/ITHB/Semester6/PPB/Tubes_Grimoire/Grimoire/app/src/main/res/layout/item_note.xml" value="0.1" />
         <entry key="..\:/ITHB/Semester6/PPB/Tubes_Grimoire/Grimoire/app/src/main/res/menu/menu_form.xml" value="0.1" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/layout/activity_about.xml" value="0.184375" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/layout/activity_login.xml" value="0.184375" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/layout/activity_main.xml" value="0.184375" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/layout/activity_note_add_update.xml" value="0.184375" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/layout/fragment_news.xml" value="0.184375" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/layout/fragment_notes.xml" value="0.184375" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/menu/bottom_nav.xml" value="0.184375" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/menu/bottom_nav_menu.xml" value="0.184375" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/menu/menu_form.xml" value="0.184375" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/menu/option_menu.xml" value="0.184375" />
+        <entry key="..\:/Users/Dave/AndroidStudioProjects/Grimoire/app/src/main/res/menu/test_menu.xml" value="0.184375" />
         <entry key="..\:/Users/Jeddi/StudioProjects/Grimoire/app/src/main/res/layout-land/activity_schedule_add_update.xml" value="0.17724867724867724" />
         <entry key="..\:/Users/Jeddi/StudioProjects/Grimoire/app/src/main/res/layout-land/fragment_schedule.xml" value="0.17724867724867724" />
         <entry key="..\:/Users/Jeddi/StudioProjects/Grimoire/app/src/main/res/layout-land/item_schedule.xml" value="0.17724867724867724" />
@@ -31,17 +42,20 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1385" />
         <entry key="app/src/main/res/drawable/ic_launcher_backgrounz.xml" value="0.1385" />
         <entry key="app/src/main/res/layout-land/fragment_profile.xml" value="0.25" />
-        <entry key="app/src/main/res/layout-land/fragment_schedule.xml" value="0.11770833333333333" />
+        <entry key="app/src/main/res/layout-land/fragment_schedule.xml" value="0.3402787251568879" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17028985507246377" />
         <entry key="app/src/main/res/layout/activity_note_add_update.xml" value="0.25" />
+
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.13728470111448834" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.17028985507246377" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_news.xml" value="0.13728470111448834" />
         <entry key="app/src/main/res/layout/fragment_notes.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.16272735595703128" />
-        <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.22" />
+
+        <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.30097961425781256" />
+
         <entry key="app/src/main/res/layout/fragment_today.xml" value="0.13728470111448834" />
         <entry key="app/src/main/res/layout/item_news.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_schedule.xml" value="0.13451086956521738" />
