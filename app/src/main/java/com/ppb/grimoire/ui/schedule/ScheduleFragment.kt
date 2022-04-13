@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -141,7 +142,8 @@ class ScheduleFragment : Fragment() {
                     listScheduleAdapter.addItem(schedule!!)
                     binding.rvSchedule.smoothScrollToPosition(listScheduleAdapter.itemCount - 1)
 
-                    showSnackbarMessage("One item recorded successfully")
+                    Toast.makeText(requireContext(),"One item recorded successfully", Toast.LENGTH_SHORT).show()
+//                    showSnackbarMessage("One item recorded successfully")
                 }
                 ScheduleAddUpdateActivity.REQUEST_UPDATE ->
                     when (resultCode) {
@@ -152,15 +154,15 @@ class ScheduleFragment : Fragment() {
 
                             listScheduleAdapter.updateItem(position, schedule!!)
                             binding.rvSchedule.smoothScrollToPosition(position)
-
-                            showSnackbarMessage("One item updated succesfully")
+                            Toast.makeText(requireContext(),"One item updated successfully", Toast.LENGTH_SHORT).show()
+//                            showSnackbarMessage("One item updated succesfully")
                         }
                         ScheduleAddUpdateActivity.RESULT_DELETE -> {
                             val position = data.getIntExtra(ScheduleAddUpdateActivity.EXTRA_POSITION, 0)
 
                             listScheduleAdapter.removeItem(position)
-
-                            showSnackbarMessage("One item deleted successfully")
+                            Toast.makeText(requireContext(),"One item deleted successfully", Toast.LENGTH_SHORT).show()
+//                            showSnackbarMessage("One item deleted successfully")
                         }
                     }
             }
@@ -182,7 +184,8 @@ class ScheduleFragment : Fragment() {
                 listScheduleAdapter.listSchedule = schedule
             } else {
                 listScheduleAdapter.listSchedule = ArrayList()
-                showSnackbarMessage("Seems to be empty here, enjoy your day")
+                Toast.makeText(requireContext(),"Seems to be empty here, enjoy your day", Toast.LENGTH_SHORT).show()
+//                showSnackbarMessage("Seems to be empty here, enjoy your day")
             }
         }
     }
