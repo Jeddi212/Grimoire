@@ -80,4 +80,6 @@
     <string name="delete">Hapus</string>
     <string name="date">Date</string>
 
+    <string name="save">Save</string>
+
 </resources>
