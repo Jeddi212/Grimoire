@@ -3,6 +3,7 @@ package com.ppb.grimoire.ui.today
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,7 @@ class TodayFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
         listScheduleAdapter = ListScheduleAdapter(this)
+
         val account = GoogleSignIn.getLastSignedInAccount(requireContext())
         personId = account?.id.toString()
 
@@ -56,15 +58,15 @@ class TodayFragment : Fragment() {
         scheduleHelper = ScheduleHelper.getInstance(requireContext())
         scheduleHelper.open()
 
-        // TODO rotate layar masih exit aja !!
         if (savedInstanceState == null) {
             // proses ambil data
             loadScheduleAsync()
         } else {
-            val list = savedInstanceState.getParcelableArrayList<Schedule>(EXTRA_STATE)
-            if (list != null) {
-                listScheduleAdapter.listSchedule = list
-            }
+//            val list = savedInstanceState.getParcelableArrayList<Schedule>(EXTRA_STATE)
+//            if (list != null) {
+//                listScheduleAdapter.listSchedule = list
+//            }
+            loadScheduleAsync()
         }
     }
 

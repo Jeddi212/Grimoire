@@ -59,6 +59,9 @@ class ScheduleFragment : Fragment() {
 
         binding = FragmentScheduleBinding.inflate(layoutInflater)
 
+        scheduleHelper = ScheduleHelper.getInstance(requireContext())
+        scheduleHelper.open()
+
         // Floating action Bar, move to new activity
         binding.fabAdd.setOnClickListener {
             val intent = Intent(context, ScheduleAddUpdateActivity::class.java)
@@ -70,27 +73,6 @@ class ScheduleFragment : Fragment() {
             startActivityForResult(intent, ScheduleAddUpdateActivity.REQUEST_ADD)
         }
 
-        scheduleHelper = ScheduleHelper.getInstance(requireContext())
-        scheduleHelper.open()
-
-        if (savedInstanceState == null) {
-            loadScheduleAsync()
-        } else {
-            val list = savedInstanceState.getParcelableArrayList<Schedule>(EXTRA_STATE)
-            if (list != null) {
-                listScheduleAdapter.listSchedule = list
-            }
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding.rvSchedule.setHasFixedSize(true)
-
-        showRecyclerList()
-
         binding.calendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
 
             clickedDate = getClickedDate(year, month, dayOfMonth)
@@ -101,6 +83,25 @@ class ScheduleFragment : Fragment() {
 
             showRecyclerList()
         }
+
+        if (savedInstanceState == null) {
+            loadScheduleAsync()
+        } else {
+//            val list = savedInstanceState.getParcelableArrayList<Schedule>(EXTRA_STATE)
+//            if (list != null) {
+//                listScheduleAdapter.listSchedule = list
+//            }
+            loadScheduleAsync()
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding.rvSchedule.setHasFixedSize(true)
+
+        showRecyclerList()
 
         // Inflate the layout for this fragment
         return binding.root
@@ -174,6 +175,11 @@ class ScheduleFragment : Fragment() {
         GlobalScope.launch(Dispatchers.Main) {
             binding.progressbar.visibility = View.VISIBLE
             val deferredSchedule = async(Dispatchers.IO) {
+
+                /**
+                 *TODO di sini error nya di query nya !!!
+                 */
+                Log.i("JEDDI", "176 Masuk sini ::: $personId")
                 val cursor = scheduleHelper.queryByDate(clickedDate, personId)
                 MappingHelper.mapCursorToArrayList(cursor)
             }
