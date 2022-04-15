@@ -3,7 +3,6 @@ package com.ppb.grimoire.ui.today
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
-import com.ppb.grimoire.R
 import com.ppb.grimoire.ScheduleAddUpdateActivity
 import com.ppb.grimoire.adapter.ListScheduleAdapter
-import com.ppb.grimoire.databinding.FragmentScheduleBinding
 import com.ppb.grimoire.databinding.FragmentTodayBinding
 import com.ppb.grimoire.db.ScheduleHelper
 import com.ppb.grimoire.helper.MappingHelper
@@ -24,8 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,7 +34,7 @@ class TodayFragment : Fragment() {
     private lateinit var personId: String
 
     private lateinit var scheduleHelper: ScheduleHelper
-    lateinit var listScheduleAdapter: ListScheduleAdapter
+    private lateinit var listScheduleAdapter: ListScheduleAdapter
 
     private var param1: String? = null
     private var param2: String? = null
@@ -86,6 +81,7 @@ class TodayFragment : Fragment() {
 
     private fun showRecyclerList() {
         binding.rvToday.layoutManager = LinearLayoutManager(context)
+        listScheduleAdapter = ListScheduleAdapter(this)
         binding.rvToday.adapter = listScheduleAdapter
     }
 
