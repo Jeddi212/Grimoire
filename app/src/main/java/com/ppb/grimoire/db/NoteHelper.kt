@@ -8,23 +8,27 @@ import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.TABLE_NAME_NOT
 import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion._ID
 import java.sql.SQLException
 
-class NoteHelper (context: Context) {
+class NoteHelper(context: Context) {
     companion object {
         private const val DATABASE_TABLE = TABLE_NAME_NOTE
         private lateinit var dataBaseHelper: DatabaseHelper
         private lateinit var database: SQLiteDatabase
 
         private var INSTANCE: NoteHelper? = null
-        fun getInstance(context: Context): NoteHelper =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: NoteHelper(context)
-            }
+
+        /**
+         * Metode untuk menginisiasi Database
+         */
+        fun getInstance(context: Context): NoteHelper = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: NoteHelper(context)
+        }
     }
 
     init {
         dataBaseHelper = DatabaseHelper(context)
     }
 
+    //------------------------------ KONEKSI DATABASE
     @Throws(SQLException::class)
     fun open() {
         database = dataBaseHelper.writableDatabase
@@ -36,7 +40,9 @@ class NoteHelper (context: Context) {
         if (database.isOpen)
             database.close()
     }
+    //-----------------------------------------------
 
+    //--------------------------------- CRUD DATABASE
     fun queryAll(): Cursor {
         return database.query(
             DATABASE_TABLE,
@@ -45,7 +51,8 @@ class NoteHelper (context: Context) {
             null,
             null,
             null,
-            "$_ID ASC")
+            "$_ID ASC"
+        )
     }
 
     fun queryById(id: String): Cursor {
@@ -57,7 +64,8 @@ class NoteHelper (context: Context) {
             null,
             null,
             null,
-            null)
+            null
+        )
     }
 
     fun insert(values: ContentValues?): Long {
@@ -71,4 +79,5 @@ class NoteHelper (context: Context) {
     fun deleteById(id: String): Int {
         return database.delete(DATABASE_TABLE, "$_ID = '$id'", null)
     }
+    //-----------------------------------------------
 }

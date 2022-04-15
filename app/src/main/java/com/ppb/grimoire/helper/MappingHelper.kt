@@ -11,11 +11,38 @@ object MappingHelper {
 
         scheduleCursor?.apply {
             while (moveToNext()) {
-                val id = getInt(getColumnIndexOrThrow(DatabaseContract.ScheduleColumns._ID))
-                val personId = getString(getColumnIndexOrThrow(DatabaseContract.ScheduleColumns.PERSON_ID))
-                val title = getString(getColumnIndexOrThrow(DatabaseContract.ScheduleColumns.TITLE))
-                val date = getString(getColumnIndexOrThrow(DatabaseContract.ScheduleColumns.DATE))
-                scheduleList.add(Schedule(id, personId, title, date))
+                val id = getInt(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.ScheduleColumns._ID
+                    )
+                )
+
+                val personId = getString(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.ScheduleColumns.PERSON_ID
+                    )
+                )
+
+                val title = getString(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.ScheduleColumns.TITLE
+                    )
+                )
+
+                val date = getString(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.ScheduleColumns.DATE
+                    )
+                )
+
+                scheduleList.add(
+                    Schedule(
+                        id,
+                        personId,
+                        title,
+                        date
+                    )
+                )
             }
         }
         return scheduleList
@@ -26,11 +53,38 @@ object MappingHelper {
 
         notesCursor?.apply {
             while (moveToNext()) {
-                val id = getInt(getColumnIndexOrThrow(DatabaseContract.NoteColumns._ID))
-                val title = getString(getColumnIndexOrThrow(DatabaseContract.NoteColumns.TITLE))
-                val description = getString(getColumnIndexOrThrow(DatabaseContract.NoteColumns.DESCRIPTION))
-                val date = getString(getColumnIndexOrThrow(DatabaseContract.NoteColumns.DATE))
-                notesList.add(Note(id, title, description, date))
+                val id = getInt(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.NoteColumns._ID
+                    )
+                )
+
+                val title = getString(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.NoteColumns.TITLE
+                    )
+                )
+
+                val description = getString(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.NoteColumns.DESCRIPTION
+                    )
+                )
+
+                val date = getString(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.NoteColumns.DATE
+                    )
+                )
+
+                notesList.add(
+                    Note(
+                        id,
+                        title,
+                        description,
+                        date
+                    )
+                )
             }
         }
         return notesList

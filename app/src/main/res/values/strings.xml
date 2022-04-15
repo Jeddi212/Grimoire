@@ -8,71 +8,21 @@
     <string name="today">Today</string>
     <string name="schedule">Schedule</string>
     <string name="profile">Profile</string>
+    <string name="news">News</string>
 
     <string name="nameTextView">%1$s</string>
     <string name="hello">Hello</string>
-
-    <string-array name="schedule_item">
-        <item>Belanja Sayur 🍅</item>
-        <item>Nugas Android 💻</item>
-        <item>Ajak Cliff ke Mall 🏨</item>
-        <item>Bayar makaroni ke Feldy 🍣</item>
-        <item>Service Laptop si Merah 🔥</item>
-        <item>Mandiin Ucing 🐈</item>
-        <item>Nyuci Baju 👚</item>
-        <item>Beli Pasir ⏳</item>
-        <item>Cek Giveaway 🎁</item>
-        <item>Jemur Kasur 🛏</item>
-        <item>Belajar UAS 📚</item>
-        <item>On Mobile Legends 📳🤙</item>
-        <item>Masak Air Biar Mateng 💦</item>
-        <item>Cas Laptop 💻</item>
-        <item>Ngukur Baju Kebaya 🌥</item>
-        <item>Jemput Mamah 🚲</item>
-        <item>Benerin Sapu 🧹</item>
-        <item>Rayain ulang tahun Dave 🎂</item>
-        <item>Jangan Lupa Bahagia 😆</item>
-        <item>Ambil Soju di Timothy 🍷</item>
-        <item>Analisis Anime Bareng Dave 🎬</item>
-        <item>Masak Makaroni 🍝</item>
-        <item>Quality Time bareng Doi Tercinta Pisan 😘</item>
-    </string-array>
-
-    <string-array name="schedule_item2">
-        <item>Ambil Soju di Timothy 🍷</item>
-        <item>Quality Time bareng Doi Tercinta Pisan 😘</item>
-        <item>Cek Giveaway 🎁</item>
-        <item>Jemur Kasur 🛏</item>
-        <item>Ngukur Baju Kebaya 🌥</item>
-        <item>Jemput Mamah 🚲</item>
-        <item>Belanja Sayur 🍅</item>
-        <item>Analisis Anime Bareng Dave 🎬</item>
-        <item>Belajar UAS 📚</item>
-        <item>On Mobile Legends 📳🤙</item>
-        <item>Masak Air Biar Mateng 💦</item>
-        <item>Masak Makaroni 🍝</item>
-        <item>Cas Laptop 💻</item>
-        <item>Nugas Android 💻</item>
-        <item>Ajak Cliff ke Mall 🏨</item>
-        <item>Beli Pasir ⏳</item>
-        <item>Benerin Sapu 🧹</item>
-        <item>Rayain ulang tahun Dave 🎂</item>
-        <item>Jangan Lupa Bahagia 😆</item>
-        <item>Bayar makaroni ke Feldy 🍣</item>
-        <item>Service Laptop si Merah 🔥</item>
-        <item>Mandiin Ucing 🐈</item>
-        <item>Nyuci Baju 👚</item>
-    </string-array>
+    <string name="your_name">Your Name</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="news">News</string>
     <string name="news_title">News Title</string>
     <string name="news_description">News Description</string>
 
-    <string name="server_client_id">171728200125-p5k9467quq2dg2ngrv5uh95p39n3eb79.apps.googleusercontent.com</string>
     <string name="sign_out">Sign Out</string>
-    <string name="your_name">Your Name</string>
+    <string name="save">Save</string>
+
+    <string name="server_client_id">171728200125-p5k9467quq2dg2ngrv5uh95p39n3eb79.apps.googleusercontent.com</string>
 
     <string name="title">Judul</string>
     <string name="description">Deskripsi</string>
@@ -83,7 +33,5 @@
 
     <string name="this_activity">Ini adalah menu About</string>
     <string name="menu_about">About Us</string>
-
-    <string name="save">Save</string>
-
+    <string name="floating_add">floating add</string>
 </resources>

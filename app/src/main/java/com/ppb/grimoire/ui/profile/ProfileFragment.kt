@@ -17,8 +17,6 @@ import com.ppb.grimoire.R
 import com.ppb.grimoire.model.User
 import com.ppb.grimoire.databinding.FragmentProfileBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -33,10 +31,10 @@ class ProfileFragment : Fragment(), View.OnClickListener {
 
     private lateinit var tvHello: TextView
     private lateinit var btnEditProfile: Button
-    lateinit var mGoogleSignInClient : GoogleSignInClient
-    lateinit var signout : Button
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private lateinit var signout: Button
     private lateinit var binding: FragmentProfileBinding
-    lateinit var user : User
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +42,6 @@ class ProfileFragment : Fragment(), View.OnClickListener {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
     }
 
     override fun onCreateView(
@@ -54,26 +51,68 @@ class ProfileFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         val acct = GoogleSignIn.getLastSignedInAccount(requireActivity())
         if (acct != null) {
-            var personName = acct.displayName.toString()
-            var personGivenName = acct.givenName.toString()
-            var personFamilyName = acct.familyName.toString()
-            var personEmail = acct.email.toString()
-            var personId = acct.id.toString()
-            var personPhoto = acct.photoUrl
-            user = User(personName,personGivenName,personFamilyName,personEmail,personId, personPhoto)
+            val personName = acct.displayName.toString()
+            val personGivenName = acct.givenName.toString()
+            val personFamilyName = acct.familyName.toString()
+            val personEmail = acct.email.toString()
+            val personId = acct.id.toString()
+            val personPhoto = acct.photoUrl
+            user = User(
+                personName,
+                personGivenName,
+                personFamilyName,
+                personEmail,
+                personId,
+                personPhoto
+            )
         }
-        Log.d("id",user.personId)
+
+        /**
+         * Extra logging
+         */
+        Log.d("id", user.personId)
+
         binding = FragmentProfileBinding.inflate(inflater, container, false)
-        if(user.personPhoto!=null) {
+        if (user.personPhoto != null) {
             with(binding) {
                 Glide.with(requireContext())
                     .load(user.personPhoto)
                     .into(userImageView)
             }
         }
+
         signout = binding.signOutButton
         signout.setOnClickListener(this)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        tvHello = view.findViewById(R.id.nameTextView)
+        val name: String = user.personName
+        tvHello.text = resources.getString(R.string.nameTextView, name)
+
+        btnEditProfile = view.findViewById(R.id.sign_out_button)
+        btnEditProfile.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.sign_out_button -> signOut()
+        }
+    }
+
+    private fun signOut() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+        mGoogleSignInClient.signOut()
+            .addOnCompleteListener() {
+                Toast.makeText(requireContext(), "Signed Out Successfully", Toast.LENGTH_LONG)
+                    .show()
+                requireActivity().finish()
+            }
     }
 
     companion object {
@@ -94,33 +133,5 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                     putString(ARG_PARAM2, param2)
                 }
             }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        tvHello = view.findViewById(R.id.nameTextView)
-        val name: String = user.personName
-        tvHello.text = resources.getString(R.string.nameTextView, name)
-
-        btnEditProfile = view.findViewById(R.id.sign_out_button)
-        btnEditProfile.setOnClickListener(this)
-    }
-
-    private fun signOut() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
-        mGoogleSignInClient.signOut()
-            .addOnCompleteListener() {
-                Toast.makeText(requireContext(),"Signed Out Successfully", Toast.LENGTH_LONG).show()
-                requireActivity().finish()
-            }
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.sign_out_button-> signOut()
-        }
     }
 }

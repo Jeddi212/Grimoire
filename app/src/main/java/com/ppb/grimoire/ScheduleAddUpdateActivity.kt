@@ -20,15 +20,16 @@ import com.ppb.grimoire.model.Schedule
 
 class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var isEdit = false
-    private var schedule: Schedule? = null
-    private var position: Int = 0
     private var clickedDate: String? = null
     private var clickedDateLong: Long = 0
-    private lateinit var scheduleHelper: ScheduleHelper
-    private lateinit var edt_title : EditText
+    private var isEdit = false
+    private var position: Int = 0
+    private var schedule: Schedule? = null
+
     private lateinit var btn_submit : Button
     private lateinit var cv : CalendarView
+    private lateinit var edt_title : EditText
+    private lateinit var scheduleHelper: ScheduleHelper
 
     companion object {
         const val EXTRA_DATE = "extra_date"
@@ -91,7 +92,6 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         btn_submit.text = btnTitle
-
         btn_submit.setOnClickListener(this)
     }
 
@@ -122,7 +122,6 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 schedule?.date = clickedDate
                 values.put(DatabaseContract.ScheduleColumns.DATE, clickedDate)
             }
-
 
             if (isEdit) {
                 val result = scheduleHelper.update(schedule?.id.toString(), values).toLong()
@@ -159,6 +158,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         if (isEdit) {
             menuInflater.inflate(R.menu.menu_form, menu)
         }
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -167,11 +167,19 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             R.id.action_delete -> showAlertDialog(ALERT_DIALOG_DELETE)
             android.R.id.home -> showAlertDialog(ALERT_DIALOG_CLOSE)
         }
+
         return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
         showAlertDialog(ALERT_DIALOG_CLOSE)
+    }
+
+    private fun getClickedDate(year: Int, month: Int, dayOfMonth: Int): String {
+
+        return dayOfMonth.toString() +
+                "/" + (month + 1).toString() +
+                "/" + year.toString()
     }
 
     private fun showAlertDialog(type: Int) {
@@ -216,12 +224,5 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
-    }
-
-    private fun getClickedDate(year: Int, month: Int, dayOfMonth: Int): String {
-
-        return dayOfMonth.toString() +
-                "/" + (month + 1).toString() +
-                "/" + year.toString()
     }
 }

@@ -13,17 +13,20 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 
-
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
-    lateinit var mGoogleSignInClient : GoogleSignInClient
-    var RC_SIGN_IN  = 0
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private var RC_SIGN_IN = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        
         val account = GoogleSignIn.getLastSignedInAccount(this)
-        if(account == null) {
+        
+        if (account == null) {
             val signin = findViewById<SignInButton>(R.id.sign_in_button)
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            val gso = GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build()
 
@@ -42,11 +45,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun signIn() {
-        val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
-
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -57,6 +56,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
+    }
+
+    private fun signIn() {
+        val signInIntent: Intent = mGoogleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
@@ -72,6 +76,4 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         }
     }
-
-
 }

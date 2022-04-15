@@ -11,20 +11,27 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
-import com.ppb.grimoire.*
+import com.ppb.grimoire.adapter.ListNewsAdapter
+import com.ppb.grimoire.adapter.OnItemClickListener
 import com.ppb.grimoire.model.News
 import com.ppb.grimoire.databinding.FragmentNewsBinding
 import cz.msebera.android.httpclient.Header
 import org.json.JSONArray
 import org.json.JSONObject
 
-class NewsFragment : Fragment(), OnItemClickListener{
+class NewsFragment : Fragment(), OnItemClickListener {
+
+    companion object {
+        private val TAG = NewsFragment::class.java.simpleName
+    }
+
     private lateinit var binding: FragmentNewsBinding
     var list = ArrayList<News>()
 
-    fun getListNews(){
+    private fun getListNews() {
         binding.progressBar.visibility = View.VISIBLE
-        val url = "https://newsapi.org/v2/top-headlines?country=id&apiKey=4c47daa5a8294b4f911942117bfdc09e"
+        val url =
+            "https://newsapi.org/v2/top-headlines?country=id&apiKey=4c47daa5a8294b4f911942117bfdc09e"
         val client = AsyncHttpClient()
         client.get(url, object : AsyncHttpResponseHandler() {
             override fun onSuccess(
@@ -45,7 +52,7 @@ class NewsFragment : Fragment(), OnItemClickListener{
                     val jsonArray = JSONArray(result2)
 
                     for (i in 0 until jsonArray.length()) {
-                        val news = News("","","","")
+                        val news = News("", "", "", "")
                         val jsonObject = jsonArray.getJSONObject(i)
                         news.title = jsonObject.getString("title")
                         news.description = jsonObject.getString("description")
@@ -73,14 +80,9 @@ class NewsFragment : Fragment(), OnItemClickListener{
                     404 -> "$statusCode : Not Found"
                     else -> "$statusCode : ${error.message}"
                 }
-                Log.d("Error",errorMessage)
+                Log.d("Error", errorMessage)
             }
         })
-    }
-    private fun showRecyclerList() {
-        binding.rvNews.layoutManager = LinearLayoutManager(context)
-        val listNewsAdapter = ListNewsAdapter(list,this)
-        binding.rvNews.adapter = listNewsAdapter
     }
 
     override fun onCreateView(
@@ -95,12 +97,13 @@ class NewsFragment : Fragment(), OnItemClickListener{
         return root
     }
 
-    companion object {
-        private val TAG = NewsFragment::class.java.simpleName
-    }
-
     override fun onItemClicked(news: News) {
-        startActivity(Intent(Intent.ACTION_VIEW,Uri.parse(news.url)))
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(news.url)))
     }
 
+    private fun showRecyclerList() {
+        binding.rvNews.layoutManager = LinearLayoutManager(context)
+        val listNewsAdapter = ListNewsAdapter(list, this)
+        binding.rvNews.adapter = listNewsAdapter
+    }
 }

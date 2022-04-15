@@ -4,8 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.ppb.grimoire.db.DatabaseContract.ScheduleColumns.Companion.TABLE_NAME
 import com.ppb.grimoire.db.DatabaseContract.ScheduleColumns.Companion._ID
 import java.sql.SQLException
@@ -15,16 +13,17 @@ class ScheduleHelper(context: Context) {
     companion object {
         private const val DATABASE_TABLE = TABLE_NAME
         private lateinit var dataBaseHelper: DatabaseHelper
+        private lateinit var database: SQLiteDatabase
+
         private var INSTANCE: ScheduleHelper? = null
 
         /**
          * Metode untuk menginisiasi Database
          */
-        fun getInstance(context: Context): ScheduleHelper = INSTANCE?: synchronized(this) {
-            INSTANCE?: ScheduleHelper(context)
+        fun getInstance(context: Context): ScheduleHelper = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: ScheduleHelper(context)
         }
 
-        private lateinit var database: SQLiteDatabase
     }
 
     init {

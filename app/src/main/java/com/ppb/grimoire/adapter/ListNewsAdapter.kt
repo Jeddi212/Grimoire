@@ -1,6 +1,5 @@
-package com.ppb.grimoire
+package com.ppb.grimoire.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,10 +8,14 @@ import com.bumptech.glide.request.RequestOptions
 import com.ppb.grimoire.model.News
 import com.ppb.grimoire.databinding.ItemNewsBinding
 
-class ListNewsAdapter(private val listNews: ArrayList<News>, val itemClickListener: OnItemClickListener): RecyclerView.Adapter<ListNewsAdapter.ListViewHolder>(){
-    inner class ListViewHolder(private val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
+class ListNewsAdapter(
+    private val listNews: ArrayList<News>,
+    private val itemClickListener: OnItemClickListener
+) : RecyclerView.Adapter<ListNewsAdapter.ListViewHolder>() {
+    inner class ListViewHolder(private val binding: ItemNewsBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(news: News, clickListener: OnItemClickListener) {
-            with(binding){
+            with(binding) {
                 Glide.with(itemView.context)
                     .load(news.photo)
                     .apply(RequestOptions().override(55, 55))
@@ -28,22 +31,26 @@ class ListNewsAdapter(private val listNews: ArrayList<News>, val itemClickListen
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ListViewHolder {
-        val binding = ItemNewsBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        val binding = ItemNewsBinding
+            .inflate(
+                LayoutInflater.from(viewGroup.context),
+                viewGroup,
+                false
+            )
         return ListViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.bind(listNews[position], itemClickListener)
-
+        holder
+            .bind(
+                listNews[position],
+                itemClickListener
+            )
     }
 
-    override fun getItemCount(): Int {
-        return listNews.size
-    }
+    override fun getItemCount(): Int = listNews.size
 }
 
-interface OnItemClickListener{
-    fun onItemClicked(news: News) {
-
-    }
+interface OnItemClickListener {
+    fun onItemClicked(news: News)
 }

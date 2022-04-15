@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:orientation="horizontal"
+    android:padding="16dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_item_photo"
@@ -21,6 +21,7 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/img_item_photo"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/tv_item_name"
             android:layout_width="match_parent"
@@ -38,4 +39,5 @@
             android:maxLines="2"
             tools:text="@string/news_description" />
     </LinearLayout>
+
 </RelativeLayout>

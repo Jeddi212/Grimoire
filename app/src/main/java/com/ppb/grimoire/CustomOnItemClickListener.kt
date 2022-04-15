@@ -14,5 +14,4 @@ class CustomOnItemClickListener(
     interface OnItemClickCallback {
         fun onItemClicked(view: View, position: Int)
     }
-
 }

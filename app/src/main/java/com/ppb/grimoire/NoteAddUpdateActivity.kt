@@ -2,7 +2,6 @@ package com.ppb.grimoire
 
 import android.content.ContentValues
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -17,19 +16,18 @@ import com.ppb.grimoire.db.DatabaseContract
 import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.DATE
 import com.ppb.grimoire.db.NoteHelper
 import com.ppb.grimoire.model.Note
-//import kotlinx.android.synthetic.main.activity_note_add_update.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
-
     private var isEdit = false
     private var note: Note? = null
     private var position: Int = 0
+
     private lateinit var noteHelper: NoteHelper
-    private lateinit var edt_title : EditText
-    private lateinit var edt_description : EditText
-    private lateinit var btn_submit : Button
+    private lateinit var edt_title: EditText
+    private lateinit var edt_description: EditText
+    private lateinit var btn_submit: Button
 
     companion object {
         const val EXTRA_NOTE = "extra_note"
@@ -81,7 +79,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         btn_submit.text = btnTitle
-
         btn_submit.setOnClickListener(this)
     }
 
@@ -112,7 +109,11 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                     setResult(RESULT_UPDATE, intent)
                     finish()
                 } else {
-                    Toast.makeText(this@NoteAddUpdateActivity, "Gagal mengupdate data", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@NoteAddUpdateActivity,
+                        "Gagal mengupdate data",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } else {
                 note?.date = getCurrentDate()
@@ -124,17 +125,14 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                     setResult(RESULT_ADD, intent)
                     finish()
                 } else {
-                    Toast.makeText(this@NoteAddUpdateActivity, "Gagal menambah data", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@NoteAddUpdateActivity,
+                        "Gagal menambah data",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
-    }
-
-    private fun getCurrentDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault())
-        val date = Date()
-
-        return dateFormat.format(date)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -156,6 +154,13 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         showAlertDialog(ALERT_DIALOG_CLOSE)
     }
 
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault())
+        val date = Date()
+
+        return dateFormat.format(date)
+    }
+
     private fun showAlertDialog(type: Int) {
         val isDialogClose = type == ALERT_DIALOG_CLOSE
         val dialogTitle: String
@@ -172,26 +177,28 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         val alertDialogBuilder = AlertDialog.Builder(this)
 
         alertDialogBuilder.setTitle(dialogTitle)
-        alertDialogBuilder.setMessage(dialogMessage).setCancelable(false).setPositiveButton("Ya") { dialog, id ->
-            if (isDialogClose) {
-                finish()
-            } else {
-                val result = noteHelper.deleteById(note?.id.toString()).toLong()
-                if (result > 0) {
-                    val intent = Intent()
-                    intent.putExtra(EXTRA_POSITION, position)
-                    setResult(RESULT_DELETE, intent)
+        alertDialogBuilder.setMessage(dialogMessage).setCancelable(false)
+            .setPositiveButton("Ya") { dialog, id ->
+                if (isDialogClose) {
                     finish()
                 } else {
-                    Toast.makeText(
-                        this@NoteAddUpdateActivity,
-                        "Gagal menghapus data",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val result = noteHelper.deleteById(note?.id.toString()).toLong()
+                    if (result > 0) {
+                        val intent = Intent()
+                        intent.putExtra(EXTRA_POSITION, position)
+                        setResult(RESULT_DELETE, intent)
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            this@NoteAddUpdateActivity,
+                            "Gagal menghapus data",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
-        }
             .setNegativeButton("Tidak") { dialog, id -> dialog.cancel() }
+
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }

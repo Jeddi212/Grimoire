@@ -2,12 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
-    //id 'kotlin-android-extensions'
 }
-
-//androidExtensions {
-//    experimental = true
-//}
 
 android {
     compileSdk 32
@@ -74,8 +69,4 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
-
 }
-
-
-

@@ -10,12 +10,15 @@ class SSActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        Handler().postDelayed({ //This method will be executed once the timer is over
-            // Start your app main activity
-            val i = Intent(this, LoginActivity::class.java)
-            startActivity(i)
-            // close this activity
-            finish()
-        }, 4500)
+        Handler().postDelayed(
+            { //This method will be executed once the timer is over
+                // Start your app main activity
+                val i = Intent(this, LoginActivity::class.java)
+                startActivity(i)
+
+                // Close this activity
+                finish()
+            }, 4500
+        )
     }
 }
