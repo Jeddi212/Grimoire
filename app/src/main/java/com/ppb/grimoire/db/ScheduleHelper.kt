@@ -88,10 +88,6 @@ class ScheduleHelper(context: Context) {
     }
 
     fun update(id: String, values: ContentValues?): Int {
-        Log.i("JEDDI", "idnya di update method ::: $id")
-        Log.i("JEDDI", "Content values ::: $values")
-
-        // TODO, ERROR UPDATE DISINI RUPANYA WOY
         return database.update(DATABASE_TABLE, values, "$_ID = ?", arrayOf(id))
     }
 

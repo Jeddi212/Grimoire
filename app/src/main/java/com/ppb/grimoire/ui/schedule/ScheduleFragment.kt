@@ -99,6 +99,7 @@ class ScheduleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        clickedDate = getCurrentDate()
         binding.rvSchedule.setHasFixedSize(true)
 
         showRecyclerList()
@@ -118,12 +119,6 @@ class ScheduleFragment : Fragment() {
         return dayOfMonth.toString() +
                 "/" + (month + 1).toString() +
                 "/" + year.toString()
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        scheduleHelper.close()
     }
 
     private fun showSnackbarMessage(message: String) {
@@ -175,11 +170,6 @@ class ScheduleFragment : Fragment() {
         GlobalScope.launch(Dispatchers.Main) {
             binding.progressbar.visibility = View.VISIBLE
             val deferredSchedule = async(Dispatchers.IO) {
-
-                /**
-                 *TODO di sini error nya di query nya !!!
-                 */
-                Log.i("JEDDI", "176 Masuk sini ::: $personId")
                 val cursor = scheduleHelper.queryByDate(clickedDate, personId)
                 MappingHelper.mapCursorToArrayList(cursor)
             }

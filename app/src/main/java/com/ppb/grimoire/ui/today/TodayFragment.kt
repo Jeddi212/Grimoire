@@ -87,11 +87,6 @@ class TodayFragment : Fragment() {
         binding.rvToday.adapter = listScheduleAdapter
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        scheduleHelper.close()
-    }
-
     private fun showSnackbarMessage(message: String) {
         Snackbar.make(binding.rvToday, message, Snackbar.LENGTH_SHORT).show()
     }
