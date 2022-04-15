@@ -39,7 +39,7 @@ class ScheduleFragment : Fragment() {
     private lateinit var personId: String
 
     private lateinit var scheduleHelper: ScheduleHelper
-    lateinit var listScheduleAdapter: ListScheduleAdapter
+    private lateinit var listScheduleAdapter: ListScheduleAdapter
 
     private var param1: String? = null
     private var param2: String? = null
@@ -108,6 +108,7 @@ class ScheduleFragment : Fragment() {
 
     private fun showRecyclerList() {
         binding.rvSchedule.layoutManager = LinearLayoutManager(context)
+        listScheduleAdapter = ListScheduleAdapter(this)
         binding.rvSchedule.adapter = listScheduleAdapter
     }
 
