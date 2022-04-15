@@ -2,8 +2,6 @@ package com.ppb.grimoire.ui.schedule
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
-import com.ppb.grimoire.R
+import com.ppb.grimoire.MainActivity.Companion.ScHelp
 import com.ppb.grimoire.ScheduleAddUpdateActivity
 import com.ppb.grimoire.adapter.ListScheduleAdapter
 import com.ppb.grimoire.databinding.FragmentScheduleBinding
@@ -59,8 +57,8 @@ class ScheduleFragment : Fragment() {
 
         binding = FragmentScheduleBinding.inflate(layoutInflater)
 
-        scheduleHelper = ScheduleHelper.getInstance(requireContext())
-        scheduleHelper.open()
+        scheduleHelper = ScHelp
+//        scheduleHelper.open()
 
         // Floating action Bar, move to new activity
         binding.fabAdd.setOnClickListener {

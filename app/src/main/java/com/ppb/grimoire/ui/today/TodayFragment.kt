@@ -3,7 +3,6 @@ package com.ppb.grimoire.ui.today
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
+import com.ppb.grimoire.MainActivity.Companion.ScHelp
 import com.ppb.grimoire.ScheduleAddUpdateActivity
 import com.ppb.grimoire.adapter.ListScheduleAdapter
 import com.ppb.grimoire.databinding.FragmentTodayBinding
@@ -55,8 +55,8 @@ class TodayFragment : Fragment() {
 
         binding = FragmentTodayBinding.inflate(layoutInflater)
 
-        scheduleHelper = ScheduleHelper.getInstance(requireContext())
-        scheduleHelper.open()
+        scheduleHelper = ScHelp
+//        scheduleHelper.open()
 
         if (savedInstanceState == null) {
             // proses ambil data

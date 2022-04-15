@@ -3,7 +3,6 @@ package com.ppb.grimoire
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -14,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.ppb.grimoire.MainActivity.Companion.ScHelp
 import com.ppb.grimoire.db.DatabaseContract
 import com.ppb.grimoire.db.ScheduleHelper
 import com.ppb.grimoire.model.Schedule
@@ -56,7 +56,7 @@ class ScheduleAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             clickedDate = getClickedDate(year, month, dayOfMonth)
         }
 
-        scheduleHelper = ScheduleHelper.getInstance(applicationContext)
+        scheduleHelper = ScHelp
 
         schedule = intent.getParcelableExtra(EXTRA_SCHEDULE)
         clickedDate = intent.getStringExtra(EXTRA_DATE)

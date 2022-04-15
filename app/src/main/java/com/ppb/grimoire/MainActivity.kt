@@ -10,8 +10,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.ppb.grimoire.db.ScheduleHelper
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        lateinit var ScHelp: ScheduleHelper
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,11 +35,17 @@ class MainActivity : AppCompatActivity() {
                 R.id.profileFragment
             )
         )
+
+        ScHelp = ScheduleHelper.getInstance(applicationContext)
+        ScHelp.open()
+
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-
         bottomNavigationView.setupWithNavController(navController)
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        ScHelp.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
