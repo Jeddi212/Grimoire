@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
+import com.ppb.grimoire.MainActivity.Companion.NtHelp
 import com.ppb.grimoire.NoteAddUpdateActivity
 import com.ppb.grimoire.R
 import com.ppb.grimoire.ScheduleAddUpdateActivity
@@ -46,7 +47,7 @@ class NotesFragment : Fragment() {
     private lateinit var personId: String
 
     private lateinit var noteHelper: NoteHelper
-    lateinit var listNoteAdapter: NoteAdapter
+    private lateinit var listNoteAdapter: NoteAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,8 +73,7 @@ class NotesFragment : Fragment() {
             startActivityForResult(intent, NoteAddUpdateActivity.REQUEST_ADD)
         }
 
-        noteHelper = NoteHelper.getInstance(requireContext())
-        noteHelper.open()
+        noteHelper = NtHelp
 
         // proses ambil data
         loadNotesAsync()

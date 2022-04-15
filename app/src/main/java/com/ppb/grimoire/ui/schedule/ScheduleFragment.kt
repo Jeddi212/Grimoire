@@ -58,7 +58,6 @@ class ScheduleFragment : Fragment() {
         binding = FragmentScheduleBinding.inflate(layoutInflater)
 
         scheduleHelper = ScHelp
-//        scheduleHelper.open()
 
         // Floating action Bar, move to new activity
         binding.fabAdd.setOnClickListener {

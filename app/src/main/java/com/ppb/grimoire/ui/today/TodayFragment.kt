@@ -56,7 +56,6 @@ class TodayFragment : Fragment() {
         binding = FragmentTodayBinding.inflate(layoutInflater)
 
         scheduleHelper = ScHelp
-//        scheduleHelper.open()
 
         if (savedInstanceState == null) {
             // proses ambil data

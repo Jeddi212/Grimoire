@@ -10,12 +10,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.ppb.grimoire.db.NoteHelper
 import com.ppb.grimoire.db.ScheduleHelper
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var ScHelp: ScheduleHelper
+        lateinit var NtHelp: NoteHelper
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +39,9 @@ class MainActivity : AppCompatActivity() {
         )
 
         ScHelp = ScheduleHelper.getInstance(applicationContext)
+        NtHelp = NoteHelper.getInstance(applicationContext)
         ScHelp.open()
+        NtHelp.open()
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
@@ -46,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         ScHelp.close()
+        NtHelp.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

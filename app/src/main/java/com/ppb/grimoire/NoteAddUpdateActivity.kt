@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.ppb.grimoire.MainActivity.Companion.NtHelp
 import com.ppb.grimoire.db.DatabaseContract
 import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.DATE
 import com.ppb.grimoire.db.NoteHelper
@@ -50,7 +51,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         edt_description = findViewById(R.id.edt_description)
         btn_submit = findViewById(R.id.btn_submit)
 
-        noteHelper = NoteHelper.getInstance(applicationContext)
+        noteHelper = NtHelp
 
         note = intent.getParcelableExtra(EXTRA_NOTE)
         if (note != null) {
