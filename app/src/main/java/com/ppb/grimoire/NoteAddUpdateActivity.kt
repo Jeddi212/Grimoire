@@ -6,12 +6,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textview.MaterialTextView
 import com.ppb.grimoire.MainActivity.Companion.NtHelp
 import com.ppb.grimoire.db.DatabaseContract
 import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.DATE
@@ -19,6 +22,7 @@ import com.ppb.grimoire.db.NoteHelper
 import com.ppb.grimoire.model.Note
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private var isEdit = false
@@ -81,6 +85,9 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
         //btn_submit.text = btnTitle
         btn_submit.setOnClickListener(this)
+
+        initMiscellaneous();
+
     }
 
     override fun onClick(view: View) {
@@ -203,4 +210,17 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
+
+    private fun initMiscellaneous() {
+        val layoutMiscellaneous = findViewById<LinearLayout>(R.id.layoutMiscellaneous)
+        val bottomSheetBehavior = BottomSheetBehavior.from(layoutMiscellaneous)
+        layoutMiscellaneous.findViewById<MaterialTextView>(R.id.textMiscellaneous).setOnClickListener(View.OnClickListener {
+                if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+                } else {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+                }
+            });
+    }
+
 }
