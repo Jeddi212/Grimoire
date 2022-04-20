@@ -34,4 +34,7 @@
     <string name="this_activity">Ini adalah menu About</string>
     <string name="menu_about">About Us</string>
     <string name="floating_add">floating add</string>
+    <string name="type_note_here">Type note here...</string>
+    <string name="miscellaneous">Miscellaneous</string>
+    <string name="add_image">Add Image</string>
 </resources>

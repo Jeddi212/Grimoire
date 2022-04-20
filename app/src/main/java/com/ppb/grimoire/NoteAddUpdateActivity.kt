@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -27,7 +28,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var noteHelper: NoteHelper
     private lateinit var edt_title: EditText
     private lateinit var edt_description: EditText
-    private lateinit var btn_submit: Button
+    private lateinit var btn_submit: ImageView
 
     companion object {
         const val EXTRA_NOTE = "extra_note"
@@ -78,7 +79,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.title = actionBarTitle
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        btn_submit.text = btnTitle
+        //btn_submit.text = btnTitle
         btn_submit.setOnClickListener(this)
     }
 
