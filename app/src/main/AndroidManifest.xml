@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Grimoire"
         tools:targetApi="q">
-
+        <activity
+            android:name=".BackupActivity"
+            android:exported="false" />
         <activity
             android:name=".AboutActivity"
             android:exported="false"
@@ -43,4 +45,5 @@
             android:name=".MainActivity"
             android:exported="true" />
     </application>
+
 </manifest>
