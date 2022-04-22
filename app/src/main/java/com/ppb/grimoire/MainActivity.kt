@@ -66,6 +66,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(i)
                 true
             }
+            R.id.menu1 -> {
+                val i = Intent(this, BackupActivity::class.java)
+                startActivity(i)
+                true
+            }
             else -> true
         }
     }
