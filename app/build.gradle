@@ -74,4 +74,8 @@ dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
     // using ssp
     implementation 'com.intuit.ssp:ssp-android:1.0.6'
+
+    // Google Drive
+    implementation('com.google.api-client:google-api-client-android:1.30.5')
+    implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0')
 }
