@@ -39,6 +39,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var uri: Uri
     private lateinit var iv: ImageView
     private lateinit var addImage: LinearLayout
+    private lateinit var addText: LinearLayout
     private lateinit var submit: LinearLayout
     private lateinit var show: LinearLayout
 
@@ -159,8 +160,13 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         }
         else if (view.id == R.id.layoutAddImage) {
 //            pickImage()
+            addImageView()
+            Log.i("JEDDI", "Add Image")
+        }
+        else if (view.id == R.id.layoutAddText) {
+//            pickImage()
             addTextView()
-            Log.i("JEDDI", "Add View")
+            Log.i("JEDDI", "Add Text")
         }
         else if (view.id == R.id.layoutSubmit) {
 //            pickImage()
@@ -265,8 +271,13 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         startActivityForResult(intent, SELECT_PHOTO)
     }
 
-    private fun addTextView() {
+    private fun addImageView() {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_image, null)
+        parent.addView(inflater)
+    }
+
+    private fun addTextView() {
+        val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_text, null)
         parent.addView(inflater)
     }
 
@@ -303,13 +314,15 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initElement() {
-        parent = findViewById<LinearLayout>(R.id.parent_linear_layout)
+        parent = findViewById(R.id.parent_linear_layout)
 
         addImage = findViewById(R.id.layoutAddImage)
+        addText = findViewById(R.id.layoutAddText)
         submit = findViewById(R.id.layoutSubmit)
         show = findViewById(R.id.layoutShowData)
 
         addImage.setOnClickListener(this)
+        addText.setOnClickListener(this)
         submit.setOnClickListener(this)
         show.setOnClickListener(this)
     }
