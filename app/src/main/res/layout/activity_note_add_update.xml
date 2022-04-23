@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NoteAddUpdateActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".NoteAddUpdateActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -76,9 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_15sdp"
                 android:background="@null"
                 android:gravity="top"
                 android:hint="@string/type_note_here"
@@ -88,9 +86,39 @@
                 android:minHeight="@dimen/_100sdp"
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_13ssp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imageNote" />
+                app:layout_constraintTop_toBottomOf="@+id/textDateTime"
+                tools:layout_editor_absoluteX="16dp" />
 
+<!--            <LinearLayout-->
+<!--                android:id="@+id/ll_add_note"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:orientation="vertical"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/edt_description">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/extraImageNote"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="@dimen/_12sdp"-->
+<!--                    android:layout_marginEnd="@dimen/_12sdp"-->
+<!--                    android:contentDescription="@string/extraImage" />-->
+
+<!--            </LinearLayout>-->
+
+            <LinearLayout
+                android:id="@+id/parent_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edt_description"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
