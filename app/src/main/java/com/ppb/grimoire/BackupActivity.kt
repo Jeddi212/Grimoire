@@ -2,6 +2,8 @@ package com.ppb.grimoire
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -9,6 +11,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
@@ -19,23 +22,22 @@ import com.google.api.client.http.FileContent
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
-import com.google.common.net.MediaType
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
-import java.nio.channels.FileChannel
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.*
+import java.nio.channels.FileChannel
 
 
 class BackupActivity : AppCompatActivity(), View.OnClickListener {
+
+    val SELECT_PHOTO = 1
+    private lateinit var uri: Uri
+    private lateinit var iv: ImageView
 
     private lateinit var backupBtn: Button
     private lateinit var restoreBtn: Button
@@ -43,6 +45,8 @@ class BackupActivity : AppCompatActivity(), View.OnClickListener {
     private fun init() {
         backupBtn = findViewById(R.id.backup_btn)
         restoreBtn = findViewById(R.id.restore_btn)
+
+        iv = findViewById(R.id.imageee)
 
         backupBtn.setOnClickListener(this)
         restoreBtn.setOnClickListener(this)
@@ -61,11 +65,55 @@ class BackupActivity : AppCompatActivity(), View.OnClickListener {
         when (v.id) {
             R.id.backup_btn -> {
 //                exportDB()
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = "image/*"
+                startActivityForResult(intent, SELECT_PHOTO)
             }
             R.id.restore_btn -> {
 //                importDB()
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK && data?.data != null) {
+            uri = data.data!!
+            try {
+                var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                iv.setImageBitmap(bitmap)
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun checkStorage(): Boolean {
+        val mExternalStorageAvailable: Boolean
+        val mExternalStorageWriteable: Boolean
+        val state = Environment.getExternalStorageState()
+        when (state) {
+            Environment.MEDIA_MOUNTED ->         // We can read and write the media
+            {
+                mExternalStorageWriteable = true
+                mExternalStorageAvailable = mExternalStorageWriteable
+            }
+            Environment.MEDIA_MOUNTED_READ_ONLY -> {
+                // We can only read the media
+                mExternalStorageAvailable = true
+                mExternalStorageWriteable = false
+            }
+            else ->         // Something else is wrong. It may be one of many other states, but
+                // all we need
+                // to know is we can neither read nor write
+            {
+                mExternalStorageWriteable = false
+                mExternalStorageAvailable = mExternalStorageWriteable
+            }
+        }
+        return mExternalStorageAvailable && mExternalStorageWriteable
     }
 
     private fun audiooo() {
