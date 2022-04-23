@@ -75,12 +75,13 @@ class BackupActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK && data?.data != null) {
             uri = data.data!!
             try {
-                var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 iv.setImageBitmap(bitmap)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
