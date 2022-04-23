@@ -2,6 +2,7 @@ package com.ppb.grimoire
 
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -37,7 +38,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     val SELECT_PHOTO = 1
     private lateinit var uri: Uri
-    private lateinit var iv: ImageView
     private lateinit var addImage: LinearLayout
     private lateinit var addText: LinearLayout
     private lateinit var submit: LinearLayout
@@ -159,22 +159,19 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         else if (view.id == R.id.layoutAddImage) {
-//            pickImage()
-            addImageView()
+            pickImage()
+//            addImageView()
             Log.i("JEDDI", "Add Image")
         }
         else if (view.id == R.id.layoutAddText) {
-//            pickImage()
             addTextView()
             Log.i("JEDDI", "Add Text")
         }
         else if (view.id == R.id.layoutSubmit) {
-//            pickImage()
             saveData()
             Log.i("JEDDI", "Save Data")
         }
         else if (view.id == R.id.layoutShowData) {
-//            pickImage()
             showData()
             Log.i("JEDDI", "Show Data")
         }
@@ -188,7 +185,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             try {
                 // Update Image View w/ selected image from device storage
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-                iv.setImageBitmap(bitmap)
+                addImageView(bitmap)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             } catch (e: IOException) {
@@ -271,9 +268,12 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         startActivityForResult(intent, SELECT_PHOTO)
     }
 
-    private fun addImageView() {
+    private fun addImageView(bitmap: Bitmap) {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_image, null)
         parent.addView(inflater)
+        parent.getChildAt(parent.childCount - 1)
+            .findViewById<ImageView>(R.id.extraImageNote)
+            .setImageBitmap(bitmap)
     }
 
     private fun addTextView() {
