@@ -9,7 +9,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_418sdp"
+        android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/_40sdp"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/_10sdp">
