@@ -22,7 +22,8 @@
             android:label="About Us" />
         <activity
             android:name=".NoteAddUpdateActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
             android:name=".ScheduleAddUpdateActivity"
             android:exported="false" />
