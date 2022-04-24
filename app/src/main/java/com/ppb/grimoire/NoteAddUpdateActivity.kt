@@ -2,7 +2,12 @@ package com.ppb.grimoire
 
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,14 +17,16 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textview.MaterialTextView
 import com.ppb.grimoire.MainActivity.Companion.NtHelp
 import com.ppb.grimoire.db.DatabaseContract
 import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.DATE
 import com.ppb.grimoire.db.NoteHelper
+import com.ppb.grimoire.model.Language
 import com.ppb.grimoire.model.Note
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,10 +36,20 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private var note: Note? = null
     private var position: Int = 0
 
+    val SELECT_PHOTO = 1
+    private lateinit var uri: Uri
+    private lateinit var addImage: LinearLayout
+    private lateinit var addText: LinearLayout
+    private lateinit var submit: LinearLayout
+    private lateinit var show: LinearLayout
+
     private lateinit var noteHelper: NoteHelper
     private lateinit var edt_title: EditText
     private lateinit var edt_description: EditText
     private lateinit var btn_submit: ImageView
+
+    private var languageList = ArrayList<Language>()
+    private lateinit var parent: LinearLayout
 
     companion object {
         const val EXTRA_NOTE = "extra_note"
@@ -87,7 +104,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         btn_submit.setOnClickListener(this)
 
         initMiscellaneous();
-
+        initElement()
     }
 
     override fun onClick(view: View) {
@@ -139,6 +156,40 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+            }
+        }
+        else if (view.id == R.id.layoutAddImage) {
+            pickImage()
+//            addImageView()
+            Log.i("JEDDI", "Add Image")
+        }
+        else if (view.id == R.id.layoutAddText) {
+            addTextView()
+            Log.i("JEDDI", "Add Text")
+        }
+        else if (view.id == R.id.layoutSubmit) {
+            saveData()
+            Log.i("JEDDI", "Save Data")
+        }
+        else if (view.id == R.id.layoutShowData) {
+            showData()
+            Log.i("JEDDI", "Show Data")
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK && data?.data != null) {
+            uri = data.data!!
+            try {
+                // Update Image View w/ selected image from device storage
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                addImageView(bitmap)
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
         }
     }
@@ -209,6 +260,71 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
+    }
+
+    private fun pickImage() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, SELECT_PHOTO)
+    }
+
+    private fun addImageView(bitmap: Bitmap) {
+        val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_image, null)
+        parent.addView(inflater)
+        parent.getChildAt(parent.childCount - 1)
+            .findViewById<ImageView>(R.id.extraImageNote)
+            .setImageBitmap(bitmap)
+    }
+
+    private fun addTextView() {
+        val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_text, null)
+        parent.addView(inflater)
+    }
+
+    private fun saveData() {
+        languageList.clear()
+        // this counts the no of child layout
+        // inside the parent Linear layout
+        val count = parent.childCount
+        var v: View?
+
+        for (i in 0 until count) {
+            v = parent.getChildAt(i)
+
+            val languageName: EditText = v.findViewById(R.id.et_name)
+
+            // create an object of Language class
+            val language = Language()
+            language.name = languageName.text.toString()
+
+            // add the data to arraylist
+            languageList.add(language)
+        }
+
+        Log.i("JEDDI", "$languageList")
+    }
+
+    private fun showData() {
+        val count = parent.childCount
+        for (i in 0 until count) {
+            Toast.makeText(this,
+                "Language at $i is ${languageList[i].name}.", Toast.LENGTH_SHORT).show()
+        }
+        Log.i("JEDDI", "FROM SHOW ::: \n $languageList")
+    }
+
+    private fun initElement() {
+        parent = findViewById(R.id.parent_linear_layout)
+
+        addImage = findViewById(R.id.layoutAddImage)
+        addText = findViewById(R.id.layoutAddText)
+        submit = findViewById(R.id.layoutSubmit)
+        show = findViewById(R.id.layoutShowData)
+
+        addImage.setOnClickListener(this)
+        addText.setOnClickListener(this)
+        submit.setOnClickListener(this)
+        show.setOnClickListener(this)
     }
 
     private fun initMiscellaneous() {
