@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -17,20 +18,25 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textview.MaterialTextView
+import com.ppb.grimoire.MainActivity.Companion.ElHelp
 import com.ppb.grimoire.MainActivity.Companion.NtHelp
 import com.ppb.grimoire.db.DatabaseContract
 import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.DATE
+import com.ppb.grimoire.db.ElementHelper
 import com.ppb.grimoire.db.NoteHelper
+import com.ppb.grimoire.helper.MappingHelper
 import com.ppb.grimoire.model.Note
 import com.ppb.grimoire.model.NoteElement
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private var isEdit = false
@@ -43,6 +49,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var submit: LinearLayout
     private lateinit var show: LinearLayout
 
+    private lateinit var elementHelper: ElementHelper
     private lateinit var noteHelper: NoteHelper
     private lateinit var edtTitle: EditText
     private lateinit var edtDescription: EditText
@@ -76,6 +83,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         btnSubmit = findViewById(R.id.btn_submit)
 
         noteHelper = NtHelp
+        elementHelper = ElHelp
 
         note = intent.getParcelableExtra(EXTRA_NOTE)
         if (note != null) {
@@ -106,13 +114,13 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         initMiscellaneous()
         initElement()
         initAccount()
+        loadElement()
     }
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btn_submit -> {
                 processBasicData()
-                processElementData()
             }
             R.id.layoutAddImage -> {
                 pickImage()
@@ -138,7 +146,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 // Update Image View w/ gambar yang telah dipilih dari storage hp
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 addImageView(bitmap)
-                noteElement.add(NoteElement(0, uri.toString(), "image", personId,0, 0))
+                noteElement.add(NoteElement(0, personId, uri.toString(), "image",0, 0))
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             } catch (e: IOException) {
@@ -195,6 +203,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                     finish()
                 } else {
                     val result = noteHelper.deleteById(note?.id.toString()).toLong()
+                    // TODO disini tambahin juga delete child element
                     if (result > 0) {
                         val intent = Intent()
                         intent.putExtra(EXTRA_POSITION, position)
@@ -234,7 +243,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private fun addTextView() {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_text, null)
         elementLayout.addView(inflater)
-        noteElement.add(NoteElement(0, "", "text", personId,0, 0))
+        noteElement.add(NoteElement(0, personId, "", "text",0, note!!.id))
     }
 
     private fun processBasicData() {
@@ -262,6 +271,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         if (isEdit) {
             val result = noteHelper.update(note?.id.toString(), values).toLong()
             if (result > 0) {
+                processElementData(note!!.id)
                 setResult(RESULT_UPDATE, intent)
                 finish()
             } else {
@@ -278,6 +288,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
             if (result > 0) {
                 note?.id = result.toInt()
+                processElementData(note!!.id)
                 setResult(RESULT_ADD, intent)
                 finish()
             } else {
@@ -290,8 +301,70 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun processElementData() {
-        val noteId = note?.id.toString()
+    private fun processElementData(noteId: Int) {
+        // Hitung jumlah child di
+        // Element Linear Layout
+        val count = elementLayout.childCount
+        var v: View?
+
+        // Untuk setiap element
+        for (i in 0 until count) {
+            v = elementLayout.getChildAt(i)
+
+            if (noteElement[i].type == "text") {
+                val elm: EditText =  v.findViewById(R.id.elm_text)
+                noteElement[i].str = elm.text.toString()
+            }
+
+            noteElement[i].noteId = noteId
+            noteElement[i].pos = i
+
+            val values = ContentValues()
+            values.put(DatabaseContract.ElementColumns.PERSON_ID, personId)
+            values.put(DatabaseContract.ElementColumns.STR, noteElement[i].str)
+            values.put(DatabaseContract.ElementColumns.TYPE, noteElement[i].type)
+            values.put(DatabaseContract.ElementColumns.POS, noteElement[i].pos)
+            values.put(DatabaseContract.ElementColumns.NOTE_ID, noteElement[i].noteId)
+
+            if (isEdit) {
+                elementHelper.update(/* TODO masukin id elemennya bukan id note */"1000", values).toLong()
+            } else {
+                elementHelper.insert(values)
+            }
+
+        }
+    }
+
+    private fun loadElement() {
+        loadElementData()
+        loadElementView()
+    }
+
+    private fun loadElementData() {
+        val cursor = elementHelper.queryAll(personId, note?.id.toString())
+        val elementList = MappingHelper.mapCursorElementToArrayList(cursor)
+
+        if (elementList.size > 0) {
+            noteElement = elementList
+        }
+    }
+
+    private fun loadElementView() {
+        for (elm in noteElement) {
+            if (elm.type == "text") {
+                val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_text, null)
+                inflater.findViewById<EditText?>(R.id.elm_text).setText(elm.str)
+                elementLayout.addView(inflater)
+            } else if (elm.type == "image") {
+                // TODO error
+                Log.i("JEDDI", "360 ::: ${elm.str?.toUri()}")
+                val imageUri = Uri.parse(elm.str)
+                Log.i("JEDDI", "240 ::: $imageUri")
+                // TODO disii errornya, line 364
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+                addImageView(bitmap)
+            }
+        }
     }
 
     private fun saveData() {
@@ -307,9 +380,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             if (noteElement[i].type == "text") {
                 val elm: EditText =  v.findViewById(R.id.elm_text)
                 noteElement[i].str = elm.text.toString()
-            }/* else if (noteElement[i].type == "image") {
-                val elm: ImageView =  v.findViewById(R.id.elm_image)
-            }*/
+            }
         }
     }
 

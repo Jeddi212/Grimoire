@@ -29,7 +29,7 @@ internal class DatabaseHelper(context: Context) :
                 " ${DatabaseContract.NoteColumns.DATE} TEXT NOT NULL)"
 
         private const val SQL_CREATE_TABLE_ELEMENTS = "CREATE TABLE $TABLE_NAME_ELEMENTS" +
-                " (${DatabaseContract.ElementColumns._ID} INTEGER PRIMARY KEY," +
+                " (${DatabaseContract.NoteColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
                 " ${DatabaseContract.ElementColumns.PERSON_ID} TEXT NOT NULL," +
                 " ${DatabaseContract.ElementColumns.STR} TEXT NOT NULL," +
                 " ${DatabaseContract.ElementColumns.TYPE} TEXT NOT NULL," +

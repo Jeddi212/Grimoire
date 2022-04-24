@@ -10,6 +10,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.ppb.grimoire.db.ElementHelper
 import com.ppb.grimoire.db.NoteHelper
 import com.ppb.grimoire.db.ScheduleHelper
 
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         lateinit var ScHelp: ScheduleHelper
         lateinit var NtHelp: NoteHelper
+        lateinit var ElHelp: ElementHelper
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +42,10 @@ class MainActivity : AppCompatActivity() {
 
         ScHelp = ScheduleHelper.getInstance(applicationContext)
         NtHelp = NoteHelper.getInstance(applicationContext)
+        ElHelp = ElementHelper.getInstance(applicationContext)
         ScHelp.open()
         NtHelp.open()
+        ElHelp.open()
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)

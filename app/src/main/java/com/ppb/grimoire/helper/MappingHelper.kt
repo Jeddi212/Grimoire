@@ -3,6 +3,7 @@ package com.ppb.grimoire.helper
 import android.database.Cursor
 import com.ppb.grimoire.db.DatabaseContract
 import com.ppb.grimoire.model.Note
+import com.ppb.grimoire.model.NoteElement
 import com.ppb.grimoire.model.Schedule
 
 object MappingHelper {
@@ -95,5 +96,61 @@ object MappingHelper {
             }
         }
         return notesList
+    }
+
+    fun mapCursorElementToArrayList(notesCursor: Cursor?): ArrayList<NoteElement> {
+        val elementList = ArrayList<NoteElement>()
+
+        notesCursor?.apply {
+            while (moveToNext()) {
+                val id = getInt(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.ElementColumns._ID
+                    )
+                )
+
+                val personId = getString(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.ElementColumns.PERSON_ID
+                    )
+                )
+
+                val str = getString(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.ElementColumns.STR
+                    )
+                )
+
+                val type = getString(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.ElementColumns.TYPE
+                    )
+                )
+
+                val pos = getInt(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.ElementColumns.POS
+                    )
+                )
+
+                val noteId = getInt(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.ElementColumns.NOTE_ID
+                    )
+                )
+
+                elementList.add(
+                    NoteElement(
+                        id,
+                        personId,
+                        str,
+                        type,
+                        pos,
+                        noteId
+                    )
+                )
+            }
+        }
+        return elementList
     }
 }

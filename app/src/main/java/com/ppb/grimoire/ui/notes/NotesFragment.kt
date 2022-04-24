@@ -1,18 +1,14 @@
 package com.ppb.grimoire.ui.notes
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.material.snackbar.Snackbar
 import com.ppb.grimoire.MainActivity.Companion.NtHelp
 import com.ppb.grimoire.NoteAddUpdateActivity
 import com.ppb.grimoire.adapter.NoteAdapter
@@ -134,10 +130,6 @@ class NotesFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelableArrayList(EXTRA_STATE, listNoteAdapter.listNotes)
-    }
-
-    private fun showSnackbarMessage(message: String) {
-        Snackbar.make(binding.rvNotes, message, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun loadNotesAsync() {
