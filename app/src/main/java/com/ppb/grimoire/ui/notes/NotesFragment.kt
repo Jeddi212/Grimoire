@@ -103,22 +103,19 @@ class NotesFragment : Fragment() {
                         "One item recorded successfully",
                         Toast.LENGTH_SHORT
                     ).show()
-//                    showSnackbarMessage("Satu item berhasil ditambahkan")
                 }
                 NoteAddUpdateActivity.REQUEST_UPDATE ->
                     when (resultCode) {
                         NoteAddUpdateActivity.RESULT_UPDATE -> {
-                            val note =
-                                data.getParcelableExtra<Note>(NoteAddUpdateActivity.EXTRA_NOTE)
+                            val note = data.getParcelableExtra<Note>(NoteAddUpdateActivity.EXTRA_NOTE)
                             val position = data.getIntExtra(NoteAddUpdateActivity.EXTRA_POSITION, 0)
                             listNoteAdapter.updateItem(position, note!!)
                             binding.rvNotes.smoothScrollToPosition(position)
                             Toast.makeText(
                                 requireContext(),
-                                "One item updated succesfully",
+                                "One item updated successfully",
                                 Toast.LENGTH_SHORT
                             ).show()
-//                            showSnackbarMessage("Satu item berhasil diubah")
                         }
                         NoteAddUpdateActivity.RESULT_DELETE -> {
                             val position = data.getIntExtra(NoteAddUpdateActivity.EXTRA_POSITION, 0)
@@ -128,7 +125,6 @@ class NotesFragment : Fragment() {
                                 "One item deleted successfully",
                                 Toast.LENGTH_SHORT
                             ).show()
-//                            showSnackbarMessage("Satu item berhasil dihapus")
                         }
                     }
             }
@@ -158,7 +154,6 @@ class NotesFragment : Fragment() {
             } else {
                 listNoteAdapter.listNotes = ArrayList()
                 Toast.makeText(requireContext(), "Note is empty", Toast.LENGTH_SHORT).show()
-//                showSnackbarMessage("Tidak ada data saat ini")
             }
         }
     }

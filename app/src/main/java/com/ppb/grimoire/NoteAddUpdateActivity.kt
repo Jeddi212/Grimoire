@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -103,68 +104,78 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        if (view.id == R.id.btn_submit) {
-            val title = edtTitle.text.toString().trim()
-            val description = edtDescription.text.toString().trim()
-
-            if (title.isEmpty()) {
-                edtTitle.error = "Field can not be blank"
-                return
+        when (view.id) {
+            R.id.btn_submit -> {
+                processBasicData()
             }
+            R.id.layoutAddImage -> {
+                pickImage()
+            }
+            R.id.layoutAddText -> {
+                addTextView()
+            }
+            R.id.layoutSubmit -> {
+                saveData()
+            }
+            R.id.layoutShowData -> {
+                showData()
+            }
+        }
+    }
 
-            note?.title = title
-            note?.description = description
+    private fun processBasicData() {
+        val title = edtTitle.text.toString().trim()
+        val description = edtDescription.text.toString().trim()
 
-            val intent = Intent()
-            intent.putExtra(EXTRA_NOTE, note)
-            intent.putExtra(EXTRA_POSITION, position)
+        if (title.isEmpty()) {
+            edtTitle.error = "Field can not be blank"
+            return
+        }
 
-            val values = ContentValues()
-            values.put(DatabaseContract.NoteColumns.TITLE, title)
-            values.put(DatabaseContract.NoteColumns.DESCRIPTION, description)
+        note?.title = title
+        note?.description = description
 
-            if (isEdit) {
-                val result = noteHelper.update(note?.id.toString(), values).toLong()
-                if (result > 0) {
-                    setResult(RESULT_UPDATE, intent)
-                    finish()
-                } else {
-                    Toast.makeText(
-                        this@NoteAddUpdateActivity,
-                        "Update data failed",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+        val intent = Intent()
+        intent.putExtra(EXTRA_NOTE, note)
+        intent.putExtra(EXTRA_POSITION, position)
+
+        val values = ContentValues()
+        values.put(DatabaseContract.NoteColumns.TITLE, title)
+        values.put(DatabaseContract.NoteColumns.DESCRIPTION, description)
+
+        if (isEdit) {
+            val result = noteHelper.update(note?.id.toString(), values).toLong()
+            if (result > 0) {
+                setResult(RESULT_UPDATE, intent)
+                finish()
             } else {
-                note?.date = getCurrentDate()
-                values.put(DATE, getCurrentDate())
-                val result = noteHelper.insert(values)
+                Toast.makeText(
+                    this@NoteAddUpdateActivity,
+                    "Update data failed",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            note?.date = getCurrentDate()
+            values.put(DATE, getCurrentDate())
+            val result = noteHelper.insert(values)
 
-                if (result > 0) {
-                    note?.id = result.toInt()
-                    setResult(RESULT_ADD, intent)
-                    finish()
-                } else {
-                    Toast.makeText(
-                        this@NoteAddUpdateActivity,
-                        "Insert data failed",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            if (result > 0) {
+                note?.id = result.toInt()
+                setResult(RESULT_ADD, intent)
+                finish()
+            } else {
+                Toast.makeText(
+                    this@NoteAddUpdateActivity,
+                    "Insert data failed",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
-        else if (view.id == R.id.layoutAddImage) {
-            pickImage()
-        }
-        else if (view.id == R.id.layoutAddText) {
-            addTextView()
-        }
-        else if (view.id == R.id.layoutSubmit) {
-            saveData()
-        }
-        else if (view.id == R.id.layoutShowData) {
-            showData()
-        }
+    }
+
+    private fun processElementData() {
+
     }
 
     @Deprecated("Deprecated in Java")
