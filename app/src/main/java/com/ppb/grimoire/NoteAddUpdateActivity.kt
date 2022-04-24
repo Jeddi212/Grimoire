@@ -23,13 +23,12 @@ import com.ppb.grimoire.MainActivity.Companion.NtHelp
 import com.ppb.grimoire.db.DatabaseContract
 import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.DATE
 import com.ppb.grimoire.db.NoteHelper
-import com.ppb.grimoire.model.Language
 import com.ppb.grimoire.model.Note
+import com.ppb.grimoire.model.NoteElement
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private var isEdit = false
@@ -48,8 +47,8 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var edt_description: EditText
     private lateinit var btn_submit: ImageView
 
-    private var languageList = ArrayList<Language>()
-    private lateinit var parent: LinearLayout
+    private var noteElement = ArrayList<NoteElement>()
+    private lateinit var elementLayout: LinearLayout
 
     companion object {
         const val EXTRA_NOTE = "extra_note"
@@ -160,7 +159,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         }
         else if (view.id == R.id.layoutAddImage) {
             pickImage()
-//            addImageView()
             Log.i("JEDDI", "Add Image")
         }
         else if (view.id == R.id.layoutAddText) {
@@ -186,6 +184,8 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 // Update Image View w/ selected image from device storage
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 addImageView(bitmap)
+                noteElement.add(NoteElement(0, uri.toString(), "image", 0, 0))
+                Log.i("JEDDI", "NOTE ELEMENT ::: 188 ::: \n $noteElement")
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             } catch (e: IOException) {
@@ -270,51 +270,51 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun addImageView(bitmap: Bitmap) {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_image, null)
-        parent.addView(inflater)
-        parent.getChildAt(parent.childCount - 1)
-            .findViewById<ImageView>(R.id.extraImageNote)
+        elementLayout.addView(inflater)
+        elementLayout.getChildAt(elementLayout.childCount - 1)
+            .findViewById<ImageView>(R.id.elm_image)
             .setImageBitmap(bitmap)
     }
 
     private fun addTextView() {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_text, null)
-        parent.addView(inflater)
+        elementLayout.addView(inflater)
+        noteElement.add(NoteElement(0, "", "text", 0, 0))
     }
 
     private fun saveData() {
-        languageList.clear()
         // this counts the no of child layout
         // inside the parent Linear layout
-        val count = parent.childCount
+        val count = elementLayout.childCount
         var v: View?
 
         for (i in 0 until count) {
-            v = parent.getChildAt(i)
+            v = elementLayout.getChildAt(i)
 
-            val languageName: EditText = v.findViewById(R.id.et_name)
+            if (noteElement[i].type == "text") {
+                val elm: EditText =  v.findViewById(R.id.elm_text)
+                noteElement[i].str = elm.text.toString()
+            } else if (noteElement[i].type == "image") {
+                val elm: ImageView =  v.findViewById(R.id.elm_image)
+            }
 
-            // create an object of Language class
-            val language = Language()
-            language.name = languageName.text.toString()
-
-            // add the data to arraylist
-            languageList.add(language)
+            Log.i("JEDDI", "294 ::: ELM EDTEXT")
         }
 
-        Log.i("JEDDI", "$languageList")
+        Log.i("JEDDI", "$noteElement")
     }
 
     private fun showData() {
-        val count = parent.childCount
+        val count = elementLayout.childCount
         for (i in 0 until count) {
             Toast.makeText(this,
-                "Language at $i is ${languageList[i].name}.", Toast.LENGTH_SHORT).show()
+                "Element at $i is ${noteElement[i].str}.", Toast.LENGTH_SHORT).show()
         }
-        Log.i("JEDDI", "FROM SHOW ::: \n $languageList")
+        Log.i("JEDDI", "FROM SHOW ::: \n $noteElement")
     }
 
     private fun initElement() {
-        parent = findViewById(R.id.parent_linear_layout)
+        elementLayout = findViewById(R.id.parent_linear_layout)
 
         addImage = findViewById(R.id.layoutAddImage)
         addText = findViewById(R.id.layoutAddText)

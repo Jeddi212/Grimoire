@@ -1,5 +1,5 @@
 package com.ppb.grimoire.model
 
-data class Language(
+data class TextElement(
     var name: String = ""
 )
