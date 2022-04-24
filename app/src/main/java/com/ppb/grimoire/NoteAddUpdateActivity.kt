@@ -1,12 +1,12 @@
 package com.ppb.grimoire
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -35,7 +35,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private var note: Note? = null
     private var position: Int = 0
 
-    val SELECT_PHOTO = 1
     private lateinit var uri: Uri
     private lateinit var addImage: LinearLayout
     private lateinit var addText: LinearLayout
@@ -43,14 +42,15 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var show: LinearLayout
 
     private lateinit var noteHelper: NoteHelper
-    private lateinit var edt_title: EditText
-    private lateinit var edt_description: EditText
-    private lateinit var btn_submit: ImageView
+    private lateinit var edtTitle: EditText
+    private lateinit var edtDescription: EditText
+    private lateinit var btnSubmit: ImageView
 
     private var noteElement = ArrayList<NoteElement>()
     private lateinit var elementLayout: LinearLayout
 
     companion object {
+        const val SELECT_IMAGE = 1
         const val EXTRA_NOTE = "extra_note"
         const val EXTRA_POSITION = "extra_position"
         const val REQUEST_ADD = 100
@@ -66,9 +66,9 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_note_add_update)
 
-        edt_title = findViewById(R.id.edt_title)
-        edt_description = findViewById(R.id.edt_description)
-        btn_submit = findViewById(R.id.btn_submit)
+        edtTitle = findViewById(R.id.edt_title)
+        edtDescription = findViewById(R.id.edt_description)
+        btnSubmit = findViewById(R.id.btn_submit)
 
         noteHelper = NtHelp
 
@@ -81,38 +81,34 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         val actionBarTitle: String
-        val btnTitle: String
 
         if (isEdit) {
-            actionBarTitle = "Ubah"
-            btnTitle = "Update"
+            actionBarTitle = "Edit"
 
             note?.let {
-                edt_title.setText(it.title)
-                edt_description.setText(it.description)
+                edtTitle.setText(it.title)
+                edtDescription.setText(it.description)
             }
         } else {
-            actionBarTitle = "Tambah"
-            btnTitle = "Simpan"
+            actionBarTitle = "Insert"
         }
 
         supportActionBar?.title = actionBarTitle
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        //btn_submit.text = btnTitle
-        btn_submit.setOnClickListener(this)
+        btnSubmit.setOnClickListener(this)
 
-        initMiscellaneous();
+        initMiscellaneous()
         initElement()
     }
 
     override fun onClick(view: View) {
         if (view.id == R.id.btn_submit) {
-            val title = edt_title.text.toString().trim()
-            val description = edt_description.text.toString().trim()
+            val title = edtTitle.text.toString().trim()
+            val description = edtDescription.text.toString().trim()
 
             if (title.isEmpty()) {
-                edt_title.error = "Field can not be blank"
+                edtTitle.error = "Field can not be blank"
                 return
             }
 
@@ -135,7 +131,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 } else {
                     Toast.makeText(
                         this@NoteAddUpdateActivity,
-                        "Gagal mengupdate data",
+                        "Update data failed",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -151,7 +147,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 } else {
                     Toast.makeText(
                         this@NoteAddUpdateActivity,
-                        "Gagal menambah data",
+                        "Insert data failed",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -159,33 +155,28 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         }
         else if (view.id == R.id.layoutAddImage) {
             pickImage()
-            Log.i("JEDDI", "Add Image")
         }
         else if (view.id == R.id.layoutAddText) {
             addTextView()
-            Log.i("JEDDI", "Add Text")
         }
         else if (view.id == R.id.layoutSubmit) {
             saveData()
-            Log.i("JEDDI", "Save Data")
         }
         else if (view.id == R.id.layoutShowData) {
             showData()
-            Log.i("JEDDI", "Show Data")
         }
     }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK && data?.data != null) {
+        if (requestCode == SELECT_IMAGE && resultCode == RESULT_OK && data?.data != null) {
             uri = data.data!!
             try {
-                // Update Image View w/ selected image from device storage
+                // Update Image View w/ gambar yang telah dipilih dari storage hp
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 addImageView(bitmap)
                 noteElement.add(NoteElement(0, uri.toString(), "image", 0, 0))
-                Log.i("JEDDI", "NOTE ELEMENT ::: 188 ::: \n $noteElement")
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             } catch (e: IOException) {
@@ -226,18 +217,18 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         val dialogMessage: String
 
         if (isDialogClose) {
-            dialogTitle = "Batal"
-            dialogMessage = "Apakah anda ingin membatalkan perubahan pada form?"
+            dialogTitle = "Cancel"
+            dialogMessage = "Do you wish to cancel edit the note?"
         } else {
-            dialogMessage = "Apakah anda yakin ingin menghapus item ini?"
-            dialogTitle = "Hapus Note"
+            dialogMessage = "Do you wish to delete this beautiful note?"
+            dialogTitle = "Delete Note"
         }
 
         val alertDialogBuilder = AlertDialog.Builder(this)
 
         alertDialogBuilder.setTitle(dialogTitle)
         alertDialogBuilder.setMessage(dialogMessage).setCancelable(false)
-            .setPositiveButton("Ya") { dialog, id ->
+            .setPositiveButton("Yes") { dialog, id ->
                 if (isDialogClose) {
                     finish()
                 } else {
@@ -250,13 +241,13 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                     } else {
                         Toast.makeText(
                             this@NoteAddUpdateActivity,
-                            "Gagal menghapus data",
+                            "Delete data failed",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
             }
-            .setNegativeButton("Tidak") { dialog, id -> dialog.cancel() }
+            .setNegativeButton("No") { dialog, id -> dialog.cancel() }
 
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
@@ -265,9 +256,10 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private fun pickImage() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-        startActivityForResult(intent, SELECT_PHOTO)
+        startActivityForResult(intent, SELECT_IMAGE)
     }
 
+    @SuppressLint("InflateParams")
     private fun addImageView(bitmap: Bitmap) {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_image, null)
         elementLayout.addView(inflater)
@@ -276,6 +268,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             .setImageBitmap(bitmap)
     }
 
+    @SuppressLint("InflateParams")
     private fun addTextView() {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_text, null)
         elementLayout.addView(inflater)
@@ -283,25 +276,22 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun saveData() {
-        // this counts the no of child layout
-        // inside the parent Linear layout
+        // Hitung jumlah child di
+        // Element Linear Layout
         val count = elementLayout.childCount
         var v: View?
 
+        // Untuk setiap element
         for (i in 0 until count) {
             v = elementLayout.getChildAt(i)
 
             if (noteElement[i].type == "text") {
                 val elm: EditText =  v.findViewById(R.id.elm_text)
                 noteElement[i].str = elm.text.toString()
-            } else if (noteElement[i].type == "image") {
+            }/* else if (noteElement[i].type == "image") {
                 val elm: ImageView =  v.findViewById(R.id.elm_image)
-            }
-
-            Log.i("JEDDI", "294 ::: ELM EDTEXT")
+            }*/
         }
-
-        Log.i("JEDDI", "$noteElement")
     }
 
     private fun showData() {
@@ -310,7 +300,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             Toast.makeText(this,
                 "Element at $i is ${noteElement[i].str}.", Toast.LENGTH_SHORT).show()
         }
-        Log.i("JEDDI", "FROM SHOW ::: \n $noteElement")
     }
 
     private fun initElement() {
@@ -330,13 +319,13 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private fun initMiscellaneous() {
         val layoutMiscellaneous = findViewById<LinearLayout>(R.id.layoutMiscellaneous)
         val bottomSheetBehavior = BottomSheetBehavior.from(layoutMiscellaneous)
-        layoutMiscellaneous.findViewById<MaterialTextView>(R.id.textMiscellaneous).setOnClickListener(View.OnClickListener {
-                if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
-                } else {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
-                }
-            });
+        layoutMiscellaneous.findViewById<MaterialTextView>(R.id.textMiscellaneous).setOnClickListener {
+            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+            } else {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+            }
+        }
     }
 
 }
