@@ -1,18 +1,14 @@
 package com.ppb.grimoire.ui.notes
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.material.snackbar.Snackbar
 import com.ppb.grimoire.MainActivity.Companion.NtHelp
 import com.ppb.grimoire.NoteAddUpdateActivity
 import com.ppb.grimoire.adapter.NoteAdapter
@@ -103,22 +99,19 @@ class NotesFragment : Fragment() {
                         "One item recorded successfully",
                         Toast.LENGTH_SHORT
                     ).show()
-//                    showSnackbarMessage("Satu item berhasil ditambahkan")
                 }
                 NoteAddUpdateActivity.REQUEST_UPDATE ->
                     when (resultCode) {
                         NoteAddUpdateActivity.RESULT_UPDATE -> {
-                            val note =
-                                data.getParcelableExtra<Note>(NoteAddUpdateActivity.EXTRA_NOTE)
+                            val note = data.getParcelableExtra<Note>(NoteAddUpdateActivity.EXTRA_NOTE)
                             val position = data.getIntExtra(NoteAddUpdateActivity.EXTRA_POSITION, 0)
                             listNoteAdapter.updateItem(position, note!!)
                             binding.rvNotes.smoothScrollToPosition(position)
                             Toast.makeText(
                                 requireContext(),
-                                "One item updated succesfully",
+                                "One item updated successfully",
                                 Toast.LENGTH_SHORT
                             ).show()
-//                            showSnackbarMessage("Satu item berhasil diubah")
                         }
                         NoteAddUpdateActivity.RESULT_DELETE -> {
                             val position = data.getIntExtra(NoteAddUpdateActivity.EXTRA_POSITION, 0)
@@ -128,7 +121,6 @@ class NotesFragment : Fragment() {
                                 "One item deleted successfully",
                                 Toast.LENGTH_SHORT
                             ).show()
-//                            showSnackbarMessage("Satu item berhasil dihapus")
                         }
                     }
             }
@@ -140,15 +132,11 @@ class NotesFragment : Fragment() {
         outState.putParcelableArrayList(EXTRA_STATE, listNoteAdapter.listNotes)
     }
 
-    private fun showSnackbarMessage(message: String) {
-        Snackbar.make(binding.rvNotes, message, Snackbar.LENGTH_SHORT).show()
-    }
-
     private fun loadNotesAsync() {
         GlobalScope.launch(Dispatchers.Main) {
             binding.progressbar.visibility = View.VISIBLE
             val deferredNotes = async(Dispatchers.IO) {
-                val cursor = noteHelper.queryAll()
+                val cursor = noteHelper.queryAll(personId)
                 MappingHelper.mapCursorNoteToArrayList(cursor)
             }
             binding.progressbar.visibility = View.INVISIBLE
@@ -158,7 +146,6 @@ class NotesFragment : Fragment() {
             } else {
                 listNoteAdapter.listNotes = ArrayList()
                 Toast.makeText(requireContext(), "Note is empty", Toast.LENGTH_SHORT).show()
-//                showSnackbarMessage("Tidak ada data saat ini")
             }
         }
     }

@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.ppb.grimoire.MainActivity
 import com.ppb.grimoire.R
 import com.ppb.grimoire.model.User
 import com.ppb.grimoire.databinding.FragmentProfileBinding
@@ -111,8 +112,14 @@ class ProfileFragment : Fragment(), View.OnClickListener {
             .addOnCompleteListener() {
                 Toast.makeText(requireContext(), "Signed Out Successfully", Toast.LENGTH_LONG)
                     .show()
+                closeDatabase()
                 requireActivity().finish()
             }
+    }
+
+    private fun closeDatabase() {
+        MainActivity.ScHelp.close()
+        MainActivity.NtHelp.close()
     }
 
     companion object {

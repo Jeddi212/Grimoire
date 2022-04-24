@@ -4,23 +4,24 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion.TABLE_NAME_NOTE
-import com.ppb.grimoire.db.DatabaseContract.NoteColumns.Companion._ID
+import com.ppb.grimoire.db.DatabaseContract.ElementColumns.Companion.POS
+import com.ppb.grimoire.db.DatabaseContract.ElementColumns.Companion.TABLE_NAME_ELEMENTS
+import com.ppb.grimoire.db.DatabaseContract.ElementColumns.Companion._ID
 import java.sql.SQLException
 
-class NoteHelper(context: Context) {
+class ElementHelper(context: Context) {
     companion object {
-        private const val DATABASE_TABLE = TABLE_NAME_NOTE
+        private const val DATABASE_TABLE = TABLE_NAME_ELEMENTS
         private lateinit var dataBaseHelper: DatabaseHelper
         private lateinit var database: SQLiteDatabase
 
-        private var INSTANCE: NoteHelper? = null
+        private var INSTANCE: ElementHelper? = null
 
         /**
          * Metode untuk menginisiasi Database
          */
-        fun getInstance(context: Context): NoteHelper = INSTANCE ?: synchronized(this) {
-            INSTANCE ?: NoteHelper(context)
+        fun getInstance(context: Context): ElementHelper = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: ElementHelper(context)
         }
     }
 
@@ -43,15 +44,15 @@ class NoteHelper(context: Context) {
     //-----------------------------------------------
 
     //--------------------------------- CRUD DATABASE
-    fun queryAll(personId: String): Cursor {
+    fun queryAll(personId: String, noteId: String): Cursor {
         return database.query(
             DATABASE_TABLE,
             null,
-            "person_id = ?",
-            arrayOf(personId),
+            "person_id = ? AND note_id = ?",
+            arrayOf(personId, noteId),
             null,
             null,
-            "$_ID ASC"
+            "$POS ASC"
         )
     }
 
