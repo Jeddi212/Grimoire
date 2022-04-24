@@ -59,6 +59,12 @@ object MappingHelper {
                     )
                 )
 
+                val personId = getString(
+                    getColumnIndexOrThrow(
+                        DatabaseContract.NoteColumns.PERSON_ID
+                    )
+                )
+
                 val title = getString(
                     getColumnIndexOrThrow(
                         DatabaseContract.NoteColumns.TITLE
@@ -80,6 +86,7 @@ object MappingHelper {
                 notesList.add(
                     Note(
                         id,
+                        personId,
                         title,
                         description,
                         date

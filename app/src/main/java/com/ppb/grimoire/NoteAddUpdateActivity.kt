@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -18,6 +17,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textview.MaterialTextView
 import com.ppb.grimoire.MainActivity.Companion.NtHelp
@@ -49,6 +50,9 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     private var noteElement = ArrayList<NoteElement>()
     private lateinit var elementLayout: LinearLayout
+
+    private var account: GoogleSignInAccount? = null
+    private lateinit var personId: String
 
     companion object {
         const val SELECT_IMAGE = 1
@@ -101,12 +105,14 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
         initMiscellaneous()
         initElement()
+        initAccount()
     }
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btn_submit -> {
                 processBasicData()
+                processElementData()
             }
             R.id.layoutAddImage -> {
                 pickImage()
@@ -123,61 +129,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun processBasicData() {
-        val title = edtTitle.text.toString().trim()
-        val description = edtDescription.text.toString().trim()
-
-        if (title.isEmpty()) {
-            edtTitle.error = "Field can not be blank"
-            return
-        }
-
-        note?.title = title
-        note?.description = description
-
-        val intent = Intent()
-        intent.putExtra(EXTRA_NOTE, note)
-        intent.putExtra(EXTRA_POSITION, position)
-
-        val values = ContentValues()
-        values.put(DatabaseContract.NoteColumns.TITLE, title)
-        values.put(DatabaseContract.NoteColumns.DESCRIPTION, description)
-
-        if (isEdit) {
-            val result = noteHelper.update(note?.id.toString(), values).toLong()
-            if (result > 0) {
-                setResult(RESULT_UPDATE, intent)
-                finish()
-            } else {
-                Toast.makeText(
-                    this@NoteAddUpdateActivity,
-                    "Update data failed",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        } else {
-            note?.date = getCurrentDate()
-            values.put(DATE, getCurrentDate())
-            val result = noteHelper.insert(values)
-
-            if (result > 0) {
-                note?.id = result.toInt()
-                setResult(RESULT_ADD, intent)
-                finish()
-            } else {
-                Toast.makeText(
-                    this@NoteAddUpdateActivity,
-                    "Insert data failed",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
-    private fun processElementData() {
-
-    }
-
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -187,7 +138,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 // Update Image View w/ gambar yang telah dipilih dari storage hp
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 addImageView(bitmap)
-                noteElement.add(NoteElement(0, uri.toString(), "image", 0, 0))
+                noteElement.add(NoteElement(0, uri.toString(), "image", personId,0, 0))
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             } catch (e: IOException) {
@@ -283,7 +234,64 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private fun addTextView() {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_text, null)
         elementLayout.addView(inflater)
-        noteElement.add(NoteElement(0, "", "text", 0, 0))
+        noteElement.add(NoteElement(0, "", "text", personId,0, 0))
+    }
+
+    private fun processBasicData() {
+        val title = edtTitle.text.toString().trim()
+        val description = edtDescription.text.toString().trim()
+
+        if (title.isEmpty()) {
+            edtTitle.error = "Field can not be blank"
+            return
+        }
+
+        note?.title = title
+        note?.personId = personId
+        note?.description = description
+
+        val intent = Intent()
+        intent.putExtra(EXTRA_NOTE, note)
+        intent.putExtra(EXTRA_POSITION, position)
+
+        val values = ContentValues()
+        values.put(DatabaseContract.NoteColumns.PERSON_ID, personId)
+        values.put(DatabaseContract.NoteColumns.TITLE, title)
+        values.put(DatabaseContract.NoteColumns.DESCRIPTION, description)
+
+        if (isEdit) {
+            val result = noteHelper.update(note?.id.toString(), values).toLong()
+            if (result > 0) {
+                setResult(RESULT_UPDATE, intent)
+                finish()
+            } else {
+                Toast.makeText(
+                    this@NoteAddUpdateActivity,
+                    "Update data failed",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            note?.date = getCurrentDate()
+            values.put(DATE, getCurrentDate())
+            val result = noteHelper.insert(values)
+
+            if (result > 0) {
+                note?.id = result.toInt()
+                setResult(RESULT_ADD, intent)
+                finish()
+            } else {
+                Toast.makeText(
+                    this@NoteAddUpdateActivity,
+                    "Insert data failed",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun processElementData() {
+        val noteId = note?.id.toString()
     }
 
     private fun saveData() {
@@ -337,6 +345,11 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
             }
         }
+    }
+
+    private fun initAccount() {
+        account = GoogleSignIn.getLastSignedInAccount(this)
+        personId = account?.id.toString()
     }
 
 }

@@ -47,12 +47,6 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        ScHelp.close()
-        NtHelp.close()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.option_menu, menu)

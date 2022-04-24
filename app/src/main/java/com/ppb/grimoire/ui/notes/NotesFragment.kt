@@ -144,7 +144,7 @@ class NotesFragment : Fragment() {
         GlobalScope.launch(Dispatchers.Main) {
             binding.progressbar.visibility = View.VISIBLE
             val deferredNotes = async(Dispatchers.IO) {
-                val cursor = noteHelper.queryAll()
+                val cursor = noteHelper.queryAll(personId)
                 MappingHelper.mapCursorNoteToArrayList(cursor)
             }
             binding.progressbar.visibility = View.INVISIBLE

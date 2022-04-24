@@ -43,12 +43,12 @@ class NoteHelper(context: Context) {
     //-----------------------------------------------
 
     //--------------------------------- CRUD DATABASE
-    fun queryAll(): Cursor {
+    fun queryAll(personId: String): Cursor {
         return database.query(
             DATABASE_TABLE,
             null,
-            null,
-            null,
+            "person_id = ?",
+            arrayOf(personId),
             null,
             null,
             "$_ID ASC"
