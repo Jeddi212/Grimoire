@@ -61,7 +61,10 @@
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.16272735595703128" />
         <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.30097961425781256" />
         <entry key="app/src/main/res/layout/fragment_today.xml" value="0.13728470111448834" />
+        <entry key="app/src/main/res/layout/item_elm_option.xml" value="0.1911231884057971" />
+        <entry key="app/src/main/res/layout/item_elm_option_text.xml" value="0.103125" />
         <entry key="app/src/main/res/layout/item_news.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_note.xml" value="0.21" />
         <entry key="app/src/main/res/layout/item_schedule.xml" value="0.13451086956521738" />
         <entry key="app/src/main/res/layout/layout_note_miscellaneous.xml" value="0.317481884057971" />
         <entry key="app/src/main/res/layout/profile_photo.xml" value="0.10235507246376811" />

@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.Menu
@@ -32,10 +33,8 @@ import com.ppb.grimoire.db.NoteHelper
 import com.ppb.grimoire.helper.MappingHelper
 import com.ppb.grimoire.model.Note
 import com.ppb.grimoire.model.NoteElement
-import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -135,6 +134,18 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.layoutShowData -> {
                 showData()
+            }
+            R.id.btn_elm_update -> {
+                Log.i("JEDDI", "BTN UPDATE")
+            }
+            R.id.btn_elm_remove -> {
+                Log.i("JEDDI", "BTN REMOVE")
+            }
+            R.id.btn_elm_up -> {
+                Log.i("JEDDI", "BTN UP")
+            }
+            R.id.btn_elm_down -> {
+                Log.i("JEDDI", "BTN DOWN")
             }
         }
     }
@@ -357,6 +368,9 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_text, null)
                 inflater.findViewById<EditText?>(R.id.elm_text).setText(elm.str)
                 elementLayout.addView(inflater)
+
+                setTextElementOptionListener(inflater)
+
             } else if (elm.type == "image") {
                 val imageUri = Uri.parse(elm.str)
                 val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_image, null)
@@ -393,11 +407,41 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                             )
                         )
                     }
+
+                    setImageElementOptionListener(inflater)
+
                     elementLayout.addView(inflater)
                 } catch (e: FileNotFoundException) {
                     e.printStackTrace()
                 }
             }
+        }
+    }
+
+    private fun setTextElementOptionListener(inflater: View) {
+        inflater.findViewById<ImageView?>(R.id.btn_elm_remove).setOnClickListener {
+            Log.i("JEDDI", "TEXT REMOVE")
+        }
+        inflater.findViewById<ImageView?>(R.id.btn_elm_up).setOnClickListener {
+            Log.i("JEDDI", "TEXT UP")
+        }
+        inflater.findViewById<ImageView?>(R.id.btn_elm_down).setOnClickListener {
+            Log.i("JEDDI", "TEXT DOWN")
+        }
+    }
+
+    private fun setImageElementOptionListener(inflater: View) {
+        inflater.findViewById<ImageView?>(R.id.btn_elm_update).setOnClickListener {
+            Log.i("JEDDI", "IMAGE UPDATE")
+        }
+        inflater.findViewById<ImageView?>(R.id.btn_elm_remove).setOnClickListener {
+            Log.i("JEDDI", "IMAGE REMOVE")
+        }
+        inflater.findViewById<ImageView?>(R.id.btn_elm_up).setOnClickListener {
+            Log.i("JEDDI", "IMAGE UP")
+        }
+        inflater.findViewById<ImageView?>(R.id.btn_elm_down).setOnClickListener {
+            Log.i("JEDDI", "IMAGE DOWN")
         }
     }
 
