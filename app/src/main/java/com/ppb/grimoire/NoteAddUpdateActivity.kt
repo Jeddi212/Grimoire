@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.Menu
@@ -43,12 +42,12 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private var isEdit = false
     private var note: Note? = null
     private var position: Int = 0
+    private var updateImageIndex = 0
+    private lateinit var updateImageInflater: View
 
     private lateinit var uri: Uri
     private lateinit var addImage: LinearLayout
     private lateinit var addText: LinearLayout
-    private lateinit var submit: LinearLayout
-    private lateinit var show: LinearLayout
 
     private lateinit var elementHelper: ElementHelper
     private lateinit var noteHelper: NoteHelper
@@ -64,6 +63,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
         const val SELECT_IMAGE = 1
+        const val UPDATE_IMAGE = 2
         const val EXTRA_NOTE = "extra_note"
         const val EXTRA_POSITION = "extra_position"
         const val REQUEST_ADD = 100
@@ -129,24 +129,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             R.id.layoutAddText -> {
                 addTextView()
             }
-            R.id.layoutSubmit -> {
-                saveData()
-            }
-            R.id.layoutShowData -> {
-                showData()
-            }
-            R.id.btn_elm_update -> {
-                Log.i("JEDDI", "BTN UPDATE")
-            }
-            R.id.btn_elm_remove -> {
-                Log.i("JEDDI", "BTN REMOVE")
-            }
-            R.id.btn_elm_up -> {
-                Log.i("JEDDI", "BTN UP")
-            }
-            R.id.btn_elm_down -> {
-                Log.i("JEDDI", "BTN DOWN")
-            }
         }
     }
 
@@ -160,6 +142,16 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 addImageView(bitmap)
                 noteElement.add(NoteElement(0, personId, uri.toString(), "image",0, 0))
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        } else if (requestCode == UPDATE_IMAGE && resultCode == RESULT_OK && data?.data != null) {
+            uri = data.data!!
+            try {
+                // Update Image View w/ gambar yang telah dipilih dari storage hp
+                updateImageView(uri.toString())
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             } catch (e: IOException) {
@@ -216,7 +208,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                     finish()
                 } else {
                     val result = noteHelper.deleteById(note?.id.toString()).toLong()
-                    // TODO disini tambahin juga delete child element
                     if (result > 0) {
                         val intent = Intent()
                         intent.putExtra(EXTRA_POSITION, position)
@@ -243,6 +234,12 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         startActivityForResult(intent, SELECT_IMAGE)
     }
 
+    private fun pickImageUpdate() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, UPDATE_IMAGE)
+    }
+
     @SuppressLint("InflateParams")
     private fun addImageView(bitmap: Bitmap) {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_image, null)
@@ -251,6 +248,42 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             .findViewById<ImageView>(R.id.elm_image)
             .setImageBitmap(bitmap)
         setImageElementOptionListener(inflater, noteElement[noteElement.size - 1])
+    }
+
+    @SuppressLint("InflateParams")
+    private fun updateImageView(uri: String) {
+        noteElement[updateImageIndex].str = uri
+        val imageUri = Uri.parse(uri)
+        val inflater = updateImageInflater
+
+        // Load Thumbnail dari image yang rdata di database
+        try {
+            val thumbnail: Bitmap =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    applicationContext.contentResolver.loadThumbnail(
+                        imageUri, Size(
+                            resources.displayMetrics.widthPixels / 2,
+                            resources.displayMetrics.heightPixels / 2
+                        ), null)
+                } else {
+                    val imgPath = uri
+                    val imgId = imgPath.reversed().subSequence(
+                        0,
+                        imgPath.reversed().indexOf("/")
+                    ).reversed().toString().toLong()
+
+                    MediaStore.Images.Thumbnails.getThumbnail(
+                        applicationContext.contentResolver,
+                        imgId,
+                        MediaStore.Images.Thumbnails.MINI_KIND,
+                        null
+                    )
+                }
+            inflater.findViewById<ImageView>(R.id.elm_image).setImageBitmap(thumbnail)
+
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
     }
 
     @SuppressLint("InflateParams")
@@ -347,6 +380,26 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun softSaveElementData(noteId: Int) {
+        // Hitung jumlah child di
+        // Element Linear Layout
+        val count = elementLayout.childCount
+        var v: View?
+
+        // Untuk setiap element
+        for (i in 0 until count) {
+            v = elementLayout.getChildAt(i)
+
+            if (noteElement[i].type == "text") {
+                val elm: EditText =  v.findViewById(R.id.elm_text)
+                noteElement[i].str = elm.text.toString()
+            }
+
+            noteElement[i].noteId = noteId
+            noteElement[i].pos = i
+        }
+    }
+
     private fun loadElement() {
         loadElementData()
         loadElementView()
@@ -361,6 +414,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun loadElementView() {
         for (elm in noteElement) {
             if (elm.type == "text") {
@@ -432,6 +486,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun downOption(inflater: View, elm: NoteElement) {
         inflater.findViewById<ImageView?>(R.id.btn_elm_down).setOnClickListener {
+            softSaveElementData(note!!.id)
             var index = 0
             for (i in 0 until noteElement.size) {
                 if (noteElement[i].id == elm.id) {
@@ -450,6 +505,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun upOption(inflater: View, elm: NoteElement) {
         inflater.findViewById<ImageView?>(R.id.btn_elm_up).setOnClickListener {
+            softSaveElementData(note!!.id)
             var index = 0
             for (i in 0 until noteElement.size) {
                 if (noteElement[i].id == elm.id) {
@@ -468,6 +524,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun removeOption(inflater: View, elm: NoteElement) {
         inflater.findViewById<ImageView?>(R.id.btn_elm_remove).setOnClickListener {
+            softSaveElementData(note!!.id)
             var index = 0
             for (i in 0 until noteElement.size) {
                 if (noteElement[i].id == elm.id) {
@@ -475,9 +532,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
             if (index > 0) {
-                Log.i("JEDDI", "BEFORE ::: ${noteElement.size}")
                 noteElement.remove(elm)
-                Log.i("JEDDI", "AFTER ::: ${noteElement.size}")
                 elementLayout.removeAllViews()
                 loadElementView()
             }
@@ -486,32 +541,13 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun updateOption(inflater: View, elm: NoteElement) {
         inflater.findViewById<ImageView?>(R.id.btn_elm_update).setOnClickListener {
-            Log.i("JEDDI", "IMAGE UPDATE")
-        }
-    }
-
-    private fun saveData() {
-        // Hitung jumlah child di
-        // Element Linear Layout
-        val count = elementLayout.childCount
-        var v: View?
-
-        // Untuk setiap element
-        for (i in 0 until count) {
-            v = elementLayout.getChildAt(i)
-
-            if (noteElement[i].type == "text") {
-                val elm: EditText =  v.findViewById(R.id.elm_text)
-                noteElement[i].str = elm.text.toString()
+            updateImageInflater = inflater
+            for (i in 0 until noteElement.size) {
+                if (noteElement[i].id == elm.id) {
+                    updateImageIndex = i
+                }
             }
-        }
-    }
-
-    private fun showData() {
-        val count = elementLayout.childCount
-        for (i in 0 until count) {
-            Toast.makeText(this,
-                "Element at $i is ${noteElement[i].str}.", Toast.LENGTH_SHORT).show()
+            pickImageUpdate()
         }
     }
 
@@ -520,13 +556,9 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
         addImage = findViewById(R.id.layoutAddImage)
         addText = findViewById(R.id.layoutAddText)
-        submit = findViewById(R.id.layoutSubmit)
-        show = findViewById(R.id.layoutShowData)
 
         addImage.setOnClickListener(this)
         addText.setOnClickListener(this)
-        submit.setOnClickListener(this)
-        show.setOnClickListener(this)
     }
 
     private fun initMiscellaneous() {
