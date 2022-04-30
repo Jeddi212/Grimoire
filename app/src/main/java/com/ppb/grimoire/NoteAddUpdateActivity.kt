@@ -371,7 +371,18 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                                     resources.displayMetrics.heightPixels / 2
                                 ), null)
                         } else {
-                            TODO("VERSION.SDK_INT < Q")
+                            val imgPath = elm.str!!
+                            val imgId = imgPath.reversed().subSequence(
+                                0,
+                                imgPath.reversed().indexOf("/")
+                            ).reversed().toString().toLong()
+
+                            MediaStore.Images.Thumbnails.getThumbnail(
+                                applicationContext.contentResolver,
+                                imgId,
+                                MediaStore.Images.Thumbnails.MINI_KIND,
+                                null
+                            )
                         }
                     inflater.findViewById<ImageView>(R.id.elm_image).setImageBitmap(thumbnail)
                     inflater.findViewById<ImageView>(R.id.elm_image).setOnClickListener {
