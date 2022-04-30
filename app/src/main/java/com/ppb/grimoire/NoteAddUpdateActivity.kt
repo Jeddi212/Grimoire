@@ -5,9 +5,10 @@ import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -18,7 +19,6 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -32,11 +32,13 @@ import com.ppb.grimoire.db.NoteHelper
 import com.ppb.grimoire.helper.MappingHelper
 import com.ppb.grimoire.model.Note
 import com.ppb.grimoire.model.NoteElement
+import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private var isEdit = false
@@ -356,13 +358,34 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 inflater.findViewById<EditText?>(R.id.elm_text).setText(elm.str)
                 elementLayout.addView(inflater)
             } else if (elm.type == "image") {
-                // TODO error
-                Log.i("JEDDI", "360 ::: ${elm.str?.toUri()}")
                 val imageUri = Uri.parse(elm.str)
-                Log.i("JEDDI", "240 ::: $imageUri")
-                // TODO disii errornya, line 364
-                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
-                addImageView(bitmap)
+                val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_image, null)
+
+                // Load Thumbnail dari image yang rdata di database
+                try {
+                    val thumbnail: Bitmap =
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            applicationContext.contentResolver.loadThumbnail(
+                                imageUri, Size(
+                                    resources.displayMetrics.widthPixels / 2,
+                                    resources.displayMetrics.heightPixels / 2
+                                ), null)
+                        } else {
+                            TODO("VERSION.SDK_INT < Q")
+                        }
+                    inflater.findViewById<ImageView>(R.id.elm_image).setImageBitmap(thumbnail)
+                    inflater.findViewById<ImageView>(R.id.elm_image).setOnClickListener {
+                        startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                imageUri
+                            )
+                        )
+                    }
+                    elementLayout.addView(inflater)
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                }
             }
         }
     }
