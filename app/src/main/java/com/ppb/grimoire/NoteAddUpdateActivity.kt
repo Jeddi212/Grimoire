@@ -250,6 +250,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         elementLayout.getChildAt(elementLayout.childCount - 1)
             .findViewById<ImageView>(R.id.elm_image)
             .setImageBitmap(bitmap)
+        setImageElementOptionListener(inflater, noteElement[noteElement.size - 1])
     }
 
     @SuppressLint("InflateParams")
@@ -257,6 +258,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_text, null)
         elementLayout.addView(inflater)
         noteElement.add(NoteElement(0, personId, "", "text",0, note!!.id))
+        setTextElementOptionListener(inflater, noteElement[noteElement.size - 1])
     }
 
     private fun processBasicData() {
@@ -320,6 +322,8 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         val count = elementLayout.childCount
         var v: View?
 
+        elementHelper.deleteByNoteId(noteId.toString())
+
         // Untuk setiap element
         for (i in 0 until count) {
             v = elementLayout.getChildAt(i)
@@ -339,12 +343,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             values.put(DatabaseContract.ElementColumns.POS, noteElement[i].pos)
             values.put(DatabaseContract.ElementColumns.NOTE_ID, noteElement[i].noteId)
 
-            if (isEdit) {
-                elementHelper.update(/* TODO masukin id elemennya bukan id note */"1000", values).toLong()
-            } else {
-                elementHelper.insert(values)
-            }
-
+            elementHelper.insert(values)
         }
     }
 
@@ -433,14 +432,13 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun downOption(inflater: View, elm: NoteElement) {
         inflater.findViewById<ImageView?>(R.id.btn_elm_down).setOnClickListener {
-            Log.i("JEDDI", "IMAGE DOWN")
             var index = 0
             for (i in 0 until noteElement.size) {
                 if (noteElement[i].id == elm.id) {
                     index = i
                 }
             }
-            if (index < noteElement.size) {
+            if (index < noteElement.size - 1) {
                 val tempNote = noteElement[index]
                 noteElement[index] = noteElement[index + 1]
                 noteElement[index + 1] = tempNote
@@ -452,7 +450,6 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun upOption(inflater: View, elm: NoteElement) {
         inflater.findViewById<ImageView?>(R.id.btn_elm_up).setOnClickListener {
-            Log.i("JEDDI", "IMAGE UP")
             var index = 0
             for (i in 0 until noteElement.size) {
                 if (noteElement[i].id == elm.id) {
@@ -471,7 +468,19 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun removeOption(inflater: View, elm: NoteElement) {
         inflater.findViewById<ImageView?>(R.id.btn_elm_remove).setOnClickListener {
-            Log.i("JEDDI", "IMAGE REMOVE")
+            var index = 0
+            for (i in 0 until noteElement.size) {
+                if (noteElement[i].id == elm.id) {
+                    index = i
+                }
+            }
+            if (index > 0) {
+                Log.i("JEDDI", "BEFORE ::: ${noteElement.size}")
+                noteElement.remove(elm)
+                Log.i("JEDDI", "AFTER ::: ${noteElement.size}")
+                elementLayout.removeAllViews()
+                loadElementView()
+            }
         }
     }
 
