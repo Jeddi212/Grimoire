@@ -369,7 +369,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                 inflater.findViewById<EditText?>(R.id.elm_text).setText(elm.str)
                 elementLayout.addView(inflater)
 
-                setTextElementOptionListener(inflater)
+                setTextElementOptionListener(inflater, elm)
 
             } else if (elm.type == "image") {
                 val imageUri = Uri.parse(elm.str)
@@ -408,7 +408,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                         )
                     }
 
-                    setImageElementOptionListener(inflater)
+                    setImageElementOptionListener(inflater, elm)
 
                     elementLayout.addView(inflater)
                 } catch (e: FileNotFoundException) {
@@ -418,30 +418,66 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun setTextElementOptionListener(inflater: View) {
-        inflater.findViewById<ImageView?>(R.id.btn_elm_remove).setOnClickListener {
-            Log.i("JEDDI", "TEXT REMOVE")
-        }
-        inflater.findViewById<ImageView?>(R.id.btn_elm_up).setOnClickListener {
-            Log.i("JEDDI", "TEXT UP")
-        }
+    private fun setTextElementOptionListener(inflater: View, elm: NoteElement) {
+        removeOption(inflater, elm)
+        upOption(inflater, elm)
+        downOption(inflater, elm)
+    }
+
+    private fun setImageElementOptionListener(inflater: View, elm: NoteElement) {
+        updateOption(inflater, elm)
+        removeOption(inflater, elm)
+        upOption(inflater, elm)
+        downOption(inflater, elm)
+    }
+
+    private fun downOption(inflater: View, elm: NoteElement) {
         inflater.findViewById<ImageView?>(R.id.btn_elm_down).setOnClickListener {
-            Log.i("JEDDI", "TEXT DOWN")
+            Log.i("JEDDI", "IMAGE DOWN")
+            var index = 0
+            for (i in 0 until noteElement.size) {
+                if (noteElement[i].id == elm.id) {
+                    index = i
+                }
+            }
+            if (index < noteElement.size) {
+                val tempNote = noteElement[index]
+                noteElement[index] = noteElement[index + 1]
+                noteElement[index + 1] = tempNote
+                elementLayout.removeAllViews()
+                loadElementView()
+            }
         }
     }
 
-    private fun setImageElementOptionListener(inflater: View) {
-        inflater.findViewById<ImageView?>(R.id.btn_elm_update).setOnClickListener {
-            Log.i("JEDDI", "IMAGE UPDATE")
+    private fun upOption(inflater: View, elm: NoteElement) {
+        inflater.findViewById<ImageView?>(R.id.btn_elm_up).setOnClickListener {
+            Log.i("JEDDI", "IMAGE UP")
+            var index = 0
+            for (i in 0 until noteElement.size) {
+                if (noteElement[i].id == elm.id) {
+                    index = i
+                }
+            }
+            if (index > 0) {
+                val tempNote = noteElement[index]
+                noteElement[index] = noteElement[index - 1]
+                noteElement[index - 1] = tempNote
+                elementLayout.removeAllViews()
+                loadElementView()
+            }
         }
+    }
+
+    private fun removeOption(inflater: View, elm: NoteElement) {
         inflater.findViewById<ImageView?>(R.id.btn_elm_remove).setOnClickListener {
             Log.i("JEDDI", "IMAGE REMOVE")
         }
-        inflater.findViewById<ImageView?>(R.id.btn_elm_up).setOnClickListener {
-            Log.i("JEDDI", "IMAGE UP")
-        }
-        inflater.findViewById<ImageView?>(R.id.btn_elm_down).setOnClickListener {
-            Log.i("JEDDI", "IMAGE DOWN")
+    }
+
+    private fun updateOption(inflater: View, elm: NoteElement) {
+        inflater.findViewById<ImageView?>(R.id.btn_elm_update).setOnClickListener {
+            Log.i("JEDDI", "IMAGE UPDATE")
         }
     }
 
