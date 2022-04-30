@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.Menu
@@ -377,8 +376,13 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                                 0,
                                 imgPath.reversed().indexOf("/")
                             ).reversed().toString().toLong()
-                            MediaStore.Images.Thumbnails.getThumbnail(this.contentResolver,
-                                imgId, MediaStore.Images.Thumbnails.MINI_KIND, null)
+
+                            MediaStore.Images.Thumbnails.getThumbnail(
+                                applicationContext.contentResolver,
+                                imgId,
+                                MediaStore.Images.Thumbnails.MINI_KIND,
+                                null
+                            )
                         }
                     inflater.findViewById<ImageView>(R.id.elm_image).setImageBitmap(thumbnail)
                     inflater.findViewById<ImageView>(R.id.elm_image).setOnClickListener {
