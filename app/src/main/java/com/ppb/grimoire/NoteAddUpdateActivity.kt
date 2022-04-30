@@ -19,10 +19,10 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.textview.MaterialTextView
 import com.ppb.grimoire.MainActivity.Companion.ElHelp
 import com.ppb.grimoire.MainActivity.Companion.NtHelp
 import com.ppb.grimoire.db.DatabaseContract
@@ -53,7 +53,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var noteHelper: NoteHelper
     private lateinit var edtTitle: EditText
     private lateinit var edtDescription: EditText
-    private lateinit var btnSubmit: ImageView
+    private lateinit var btnSubmit: LottieAnimationView
 
     private var noteElement = ArrayList<NoteElement>()
     private lateinit var elementLayout: LinearLayout
@@ -564,11 +564,12 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private fun initMiscellaneous() {
         val layoutMiscellaneous = findViewById<LinearLayout>(R.id.layoutMiscellaneous)
         val bottomSheetBehavior = BottomSheetBehavior.from(layoutMiscellaneous)
-        layoutMiscellaneous.findViewById<MaterialTextView>(R.id.textMiscellaneous).setOnClickListener {
+        val arrowUp = layoutMiscellaneous.findViewById<LottieAnimationView>(R.id.arrow_up)
+        arrowUp.setOnClickListener {
             if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             } else {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
     }
