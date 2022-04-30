@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.ppb.grimoire.db.DatabaseContract.ElementColumns.Companion.NOTE_ID
 import com.ppb.grimoire.db.DatabaseContract.ElementColumns.Companion.POS
 import com.ppb.grimoire.db.DatabaseContract.ElementColumns.Companion.TABLE_NAME_ELEMENTS
 import com.ppb.grimoire.db.DatabaseContract.ElementColumns.Companion._ID
@@ -75,6 +76,10 @@ class ElementHelper(context: Context) {
 
     fun update(id: String, values: ContentValues?): Int {
         return database.update(DATABASE_TABLE, values, "$_ID = ?", arrayOf(id))
+    }
+
+    fun deleteByNoteId(noteId: String): Int {
+        return database.delete(DATABASE_TABLE, "$NOTE_ID = '$noteId'", null)
     }
 
     fun deleteById(id: String): Int {

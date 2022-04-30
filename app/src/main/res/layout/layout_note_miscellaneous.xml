@@ -9,17 +9,15 @@
     android:orientation="vertical"
     app:behavior_peekHeight="@dimen/_40sdp"
     app:layout_behavior="@string/bottom_sheet_behavior">
-    
-    <TextView
-        android:id="@+id/textMiscellaneous"
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/arrow_up"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:fontFamily="@font/vergian"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="@string/miscellaneous"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_13ssp"/>
+        android:layout_height="@dimen/_45sdp"
+        app:lottie_rawRes="@raw/arrow_up_circle"
+        app:lottie_colorFilter="@color/colorSearchIcon"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
 
     <LinearLayout
         android:id="@+id/layoutAddImage"
@@ -30,12 +28,12 @@
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
-        <ImageView
-            android:layout_width="@dimen/_22sdp"
-            android:layout_height="@dimen/_22sdp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_baseline_image_24"
-            app:tint="@color/colorIcons" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            app:lottie_rawRes="@raw/add_image"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -57,12 +55,12 @@
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
-        <ImageView
-            android:layout_width="@dimen/_22sdp"
-            android:layout_height="@dimen/_22sdp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_baseline_text_fields_24"
-            app:tint="@color/colorIcons" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            app:lottie_rawRes="@raw/add_text"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -70,60 +68,6 @@
             android:layout_marginStart="@dimen/_10sdp"
             android:includeFontPadding="false"
             android:text="@string/add_text"
-            android:textColor="@color/colorIcons"
-            android:textSize="@dimen/_12ssp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutSubmit"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_35sdp"
-        android:layout_margin="@dimen/_10sdp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
-
-        <ImageView
-            android:layout_width="@dimen/_22sdp"
-            android:layout_height="@dimen/_22sdp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_baseline_image_24"
-            app:tint="@color/colorIcons" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:includeFontPadding="false"
-            android:text="Submit"
-            android:textColor="@color/colorIcons"
-            android:textSize="@dimen/_12ssp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutShowData"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_35sdp"
-        android:layout_margin="@dimen/_10sdp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
-
-        <ImageView
-            android:layout_width="@dimen/_22sdp"
-            android:layout_height="@dimen/_22sdp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_baseline_image_24"
-            app:tint="@color/colorIcons" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:includeFontPadding="false"
-            android:text="Show Data"
             android:textColor="@color/colorIcons"
             android:textSize="@dimen/_12ssp"/>
 

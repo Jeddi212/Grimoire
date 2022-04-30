@@ -40,4 +40,5 @@
     <string name="extraImage">extraImage</string>
     <string name="add_text">Add Text</string>
     <string name="extra_text">Extra text</string>
+    <string name="plus">+</string>
 </resources>
