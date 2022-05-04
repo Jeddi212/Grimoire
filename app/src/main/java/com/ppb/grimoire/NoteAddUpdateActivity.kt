@@ -139,9 +139,9 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             uri = data.data!!
             try {
                 // Update Image View w/ gambar yang telah dipilih dari storage hp
+                noteElement.add(NoteElement(0, personId, uri.toString(), "image", 0, 0))
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 addImageView(bitmap)
-                noteElement.add(NoteElement(0, personId, uri.toString(), "image",0, 0))
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             } catch (e: IOException) {
