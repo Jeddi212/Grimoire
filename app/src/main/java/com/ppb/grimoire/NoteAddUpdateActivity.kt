@@ -139,7 +139,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
             uri = data.data!!
             try {
                 // Update Image View w/ gambar yang telah dipilih dari storage hp
-                noteElement.add(NoteElement(0, personId, uri.toString(), "image", 0, 0))
+                noteElement.add(NoteElement(noteElement.size, personId, uri.toString(), "image", 0, 0))
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 addImageView(bitmap)
             } catch (e: FileNotFoundException) {
@@ -290,7 +290,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
     private fun addTextView() {
         val inflater = LayoutInflater.from(this).inflate(R.layout.element_note_text, null)
         elementLayout.addView(inflater)
-        noteElement.add(NoteElement(0, personId, "", "text",0, note!!.id))
+        noteElement.add(NoteElement(noteElement.size, personId, "", "text",0, note!!.id))
         setTextElementOptionListener(inflater, noteElement[noteElement.size - 1])
     }
 
@@ -411,6 +411,10 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
 
         if (elementList.size > 0) {
             noteElement = elementList
+            for (i in 0 until noteElement.size) {
+                noteElement[i].id = i
+                noteElement[i].pos = i
+            }
         }
     }
 
@@ -531,7 +535,7 @@ class NoteAddUpdateActivity : AppCompatActivity(), View.OnClickListener {
                     index = i
                 }
             }
-            if (index > 0) {
+            if (index >= 0 && index <= noteElement.size - 1) {
                 noteElement.remove(elm)
                 elementLayout.removeAllViews()
                 loadElementView()
